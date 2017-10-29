@@ -1,0 +1,20 @@
+machine:
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+  node:
+    version: node
+
+dependencies:
+  override:
+    - yarn
+  pre:
+    - rm -rf node_modules
+    - yarn cache clean
+    - yarn global add greenkeeper-lockfile@1
+    - greenkeeper-lockfile-update
+  post:
+    - greenkeeper-lockfile-upload
+
+test:
+  override:
+    - yarn build

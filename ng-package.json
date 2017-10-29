@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
+  "src": "angularfire-lite",
+  "dest": "dist/angularfire-lite",
+  "workingDirectory": ".ng_build",
+  "lib": {
+    "entryFile": "src/public_api.ts",
+    "externals": {
+      "firebase": "firebase"
+    }
+  }
+}

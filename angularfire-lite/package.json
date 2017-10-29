@@ -1,0 +1,13 @@
+{
+  "name": "angularfire-lite",
+  "version": "1.0.1-rc.1",
+  "license": "MIT",
+  "description": "Lightweight library to use Firebase API with Angular.",
+  "author": "Hamed Baatour",
+  "private": false,
+  "peerDependencies": {
+    "@angular/core": "^4.1.2",
+    "firebase": "^4.6.0",
+    "rxjs": "^5.5.2"
+  }
+}
