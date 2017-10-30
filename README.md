@@ -101,3 +101,37 @@ export class AppModule { }
 - **Observable based**: Every function returns an Observable that you should subscribe to it to get back the data.
 
 - **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some useful addtions.
+
+
+[![angularfire-lite-faq](https://cdn.rawgit.com/hamedbaatour/fbbd36bce4d7e5a4ec0e07b71b71db15/raw/d58da0f50d52c27815832f7587b29d5b3d58eb3f/FAQ.svg)](#)
+
+### Users
+___
+
+- **Why don't just use the native Firebase API?**
+
+
+Chnage Detection will not fire in other words nothing will update in screen when data changes.
+
+
+- **Can I use AngularFire Lite in production?**
+
+Absolutely! you will not regret it, We would love to hear your story too!
+
+
+### Contributors:
+___
+
+- **How can I contribute?**
+
+We want to keep AngularFire Lite in sync with the Firebase API so if any new feature comes out don't hesitate to send a PR.
+
+- **Why AngularFire Lite is so simple?**
+
+
+Why add uncessary complixity when simplicity darws a straight line to productivity.
+
+
+- **Why the there is no tests?**
+
+people just follow the lead of others when most of the time the context does not fit. So no tests!
