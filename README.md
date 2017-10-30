@@ -100,4 +100,4 @@ export class AppModule { }
 
 - **Observable based**: Every function returns an Observable that you should subscribe to it to get back the data.
 
-- **Learn One API**: AngularFire Lite has the same syntax of the native Firebase API plus some useful addtions.
+- **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some useful addtions.
