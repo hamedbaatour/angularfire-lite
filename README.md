@@ -5,14 +5,16 @@
     <p align="center">lightweight wrapper to use Firebase API with Angular.</p>
 </p>
 
-[![CircleCI](https://img.shields.io/circleci/project/github/hamedbaatour/angularfire-lite.svg)](https://circleci.com/gh/hamedbaatour/angularfire-lite)
+[![Travis](https://img.shields.io/travis/hamedbaatour/angularfire-lite.svg)](https://travis-ci.org/hamedbaatour/angularfire-lite)
+[![CircleCI](https://circleci.com/gh/hamedbaatour/angularfire-lite.svg?style=shield)](https://circleci.com/gh/hamedbaatour/angularfire-lite)
 [![npm version](https://badge.fury.io/js/angularfire-lite.svg)](https://www.npmjs.com/package/angularfire-lite)
-[![GitHub issues](https://img.shields.io/github/issues/hamedbaatour/angularfire-lite.svg)](https://github.com/hamedbaatour/angularfire-lite/issues)
+[![dependencies Status](https://david-dm.org/hamedbaatour/angularfire-lite/status.svg)](https://david-dm.org/hamedbaatour/angularfire-lite)
 [![Greenkeeper](https://badges.greenkeeper.io/hamedbaatour/angularfire-lite.svg)](#)
+[![GitHub issues](https://img.shields.io/github/issues/hamedbaatour/angularfire-lite.svg)](https://github.com/hamedbaatour/angularfire-lite/issues)
  [![Join the chat at https://gitter.im/angularfire-lite/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angularfire-lite/Lobby)
 
 
-| Features              | AngularFire Light         | AngularFire2  |
+| Features              | AngularFire Lite         | AngularFire2  |
 | -------------         |:-------------:|         :-------------------:  |
 | Authentication        | :heavy_check_mark:    | :heavy_check_mark:     |
 | Firestore             | :heavy_check_mark:    |   :heavy_check_mark:   |
@@ -94,6 +96,42 @@ export class AppModule { }
 
 <br>
 
-[![angularfire-lite-api](https://cdn.rawgit.com/hamedbaatour/f8c9581ab250d47e841d49ae7690ef82/raw/c6243c526735aefa4fa92a6df55a0d29c46cdcc8/api.svg)](#)
+[![angularfire-lite-api](https://cdn.rawgit.com/hamedbaatour/f8c9581ab250d47e841d49ae7690ef82/raw/2cc67b7b2d1c29adbcdf3b7ea32a2de44439056a/api.svg)](#)
 
-<br>
+- **Observable based**: Every function returns an Observable that you should subscribe to it to get back the data.
+
+- **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some useful addtions.
+
+
+[![angularfire-lite-faq](https://cdn.rawgit.com/hamedbaatour/fbbd36bce4d7e5a4ec0e07b71b71db15/raw/d58da0f50d52c27815832f7587b29d5b3d58eb3f/FAQ.svg)](#)
+
+### Users
+___
+
+- **Why don't just use the native Firebase API?**
+
+
+Chnage Detection will not fire in other words nothing will update in screen when data changes.
+
+
+- **Can I use AngularFire Lite in production?**
+
+Absolutely! you will not regret it, We would love to hear your story too!
+
+
+### Contributors:
+___
+
+- **How can I contribute?**
+
+We want to keep AngularFire Lite in sync with the Firebase API so if any new feature comes out don't hesitate to send a PR.
+
+- **Why AngularFire Lite is so simple?**
+
+
+Why add uncessary complixity when simplicity darws a straight line to productivity.
+
+
+- **Why the there is no tests?**
+
+people just follow the lead of others when most of the time the context does not fit. So no tests!
