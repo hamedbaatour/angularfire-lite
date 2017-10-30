@@ -111,7 +111,7 @@ ___
 - **Why don't just use the native Firebase API?**
 
 
-Chnage Detection will not fire in other words nothing will update in screen when data changes.
+If you use the native Firebase API directly Angular change detection will not fire in other words nothing will update in screen when data changes.
 
 
 - **Can I use AngularFire Lite in production?**
