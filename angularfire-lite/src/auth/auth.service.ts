@@ -15,6 +15,8 @@ export class AngularFireLiteAuth {
     this.fb = firebase.initializeApp(this.config);
   }
 
+  // ------------- Getters -----------------//
+
   get uid(): Subject<any> {
     const UID = new Subject();
     this.authenticated.subscribe((isAuth) => {
@@ -73,6 +75,8 @@ export class AngularFireLiteAuth {
   }
 
 
+  // ------------- Setters -----------------//
+
   set UserData(data: any) {
     this.fb.auth().currentUser.updateProfile(data);
   }
@@ -91,6 +95,9 @@ export class AngularFireLiteAuth {
         return error.message;
       }));
   }
+
+
+  // ------------- Actions -----------------//
 
   login(email: string, password: string): Observable<any> {
     return Observable.fromPromise(this.fb.auth().signInWithEmailAndPassword(email, password));
