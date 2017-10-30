@@ -96,7 +96,7 @@ export class AppModule { }
 
 <br>
 
-[![angularfire-lite-api](https://cdn.rawgit.com/hamedbaatour/f8c9581ab250d47e841d49ae7690ef82/raw/c6243c526735aefa4fa92a6df55a0d29c46cdcc8/api.svg)](#)
+[![angularfire-lite-api](https://cdn.rawgit.com/hamedbaatour/f8c9581ab250d47e841d49ae7690ef82/raw/2cc67b7b2d1c29adbcdf3b7ea32a2de44439056a/api.svg)](#)
 
 - **Observable based**: Every function returns an Observable that you should subscribe to it to get back the data.
 
