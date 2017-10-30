@@ -5,11 +5,11 @@
     <p align="center">lightweight wrapper to use Firebase API with Angular.</p>
 </p>
 
-[![npm version](https://badge.fury.io/js/angularfire-lite.svg)](https://badge.fury.io/js/angularfire-lite)
+[![CircleCI](https://img.shields.io/circleci/project/github/hamedbaatour/angularfire-lite.svg)](https://circleci.com/gh/hamedbaatour/angularfire-lite)
+[![npm version](https://badge.fury.io/js/angularfire-lite.svg)](https://www.npmjs.com/package/angularfire-lite)
 [![GitHub issues](https://img.shields.io/github/issues/hamedbaatour/angularfire-lite.svg)](https://github.com/hamedbaatour/angularfire-lite/issues)
 [![Greenkeeper](https://badges.greenkeeper.io/hamedbaatour/angularfire-lite.svg)](#)
  [![Join the chat at https://gitter.im/angularfire-lite/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angularfire-lite/Lobby)
-
 
 
 | Features              | AngularFire Light         | AngularFire2  |
