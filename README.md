@@ -114,11 +114,6 @@ ___
 If you use the native Firebase API directly Angular change detection will not fire in other words nothing will update in screen when data changes.
 
 
-- **Can I use AngularFire Lite in production?**
-
-Absolutely! you will not regret it, We would love to hear your story too!
-
-
 ### Contributors:
 ___
 
@@ -132,6 +127,6 @@ We want to keep AngularFire Lite in sync with the Firebase API so if any new fea
 Why add uncessary complixity when simplicity darws a straight line to productivity.
 
 
-- **Why the there is no tests?**
+- **Why the there are no tests?**
 
 people just follow the lead of others when most of the time the context does not fit. So no tests!
