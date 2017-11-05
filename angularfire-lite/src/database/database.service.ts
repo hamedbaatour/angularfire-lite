@@ -1,10 +1,11 @@
-import { FirebaseAppConfig } from '../core.module';
-import * as Ifirebase from 'firebase';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromPromise';
 import { Subject } from 'rxjs/Subject';
 
+
+import { FirebaseAppConfig } from '../core.module';
+import * as Ifirebase from 'firebase';
 const firebase = Ifirebase;
 
 @Injectable()

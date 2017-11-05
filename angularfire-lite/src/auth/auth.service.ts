@@ -5,6 +5,7 @@ import 'rxjs/add/observable/fromPromise';
 
 import { FirebaseAppConfig } from '../core.module';
 import * as Ifirebase from 'firebase';
+
 const firebase = Ifirebase;
 
 @Injectable()
@@ -78,22 +79,16 @@ export class AngularFireLiteAuth {
   // ------------- Setters -----------------//
 
   set UserData(data: any) {
-    this.fb.auth().currentUser.updateProfile(data);
+    Observable.fromPromise(this.fb.auth().currentUser.updateProfile(data));
   }
 
 
   set updateEmail(newEmail) {
-    Observable.fromPromise(this.fb.auth().currentUser.updateEmail(newEmail)
-      .catch((error) => {
-        return error.message;
-      }));
+    Observable.fromPromise(this.fb.auth().currentUser.updateEmail(newEmail));
   }
 
   set updatePassword(newPassword) {
-    Observable.fromPromise(this.fb.auth().currentUser.updatePassword(newPassword)
-      .catch((error) => {
-        return error.message;
-      }));
+    Observable.fromPromise(this.fb.auth().currentUser.updatePassword(newPassword));
   }
 
 
@@ -129,10 +124,7 @@ export class AngularFireLiteAuth {
   }
 
   deletePermanently(credentials): Observable<any> {
-    return Observable.fromPromise(this.fb.auth().currentUser.delete()
-      .catch((error) => {
-        return error.message;
-      }));
+    return Observable.fromPromise(this.fb.auth().currentUser.delete());
   }
 
 
