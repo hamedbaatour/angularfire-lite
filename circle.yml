@@ -10,6 +10,7 @@ dependencies:
   pre:
     - rm -rf node_modules
     - yarn cache clean
+    - yarn add @angular/cli -g
     
 test:
   override:
