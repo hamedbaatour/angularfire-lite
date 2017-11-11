@@ -1,10 +1,11 @@
-sudo: required
+dist: trusty
+sudo: true
 
 language: node_js
 
 node_js:
-  - node
-
+  - "8.9"
+  
 cache:
   yarn: true
   directories:
