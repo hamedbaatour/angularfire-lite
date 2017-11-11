@@ -9,14 +9,14 @@
   "dependencies": {
     "@angular/common": "~5.0.0",
     "@angular/core": "~5.0.0",
+    "@angular/compiler": "~5.0.0",
     "firebase": "^4.6.2",
-    "rxjs": "^5.4.2",
-    "zone.js": "^0.8.14"
+    "rxjs": "^5.4.2"
   },
   "devDependencies": {
-    "ng-packagr": "^1.6.0-rc.0",
     "@angular/compiler-cli": "~5.0.0",
-    "typescript": "~2.4.2",
+    "ng-packagr": "^1.6.0-rc.0",
+    "typescript": "^2.6.1",
     "tslint": "^5.8.0"
   }
 }
