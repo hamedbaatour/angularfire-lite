@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-
-import { FirebaseAppConfig } from '../core.module';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { AngularFireLiteApp } from '../core.service';
 import * as Ifirebase from 'firebase';
 const firebase = Ifirebase;
 
@@ -9,8 +9,12 @@ export class AngularFireLiteFirestore {
 
   public fb;
 
-  constructor(public config: FirebaseAppConfig) {
-    this.fb = firebase.initializeApp(this.config);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, public config: AngularFireLiteApp) {
+
+    if (firebase.apps.length) {
+      this.fb = config.instance;
+    }
+
   }
 
   //

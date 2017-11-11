@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer, isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromPromise';
 import { Subject } from 'rxjs/Subject';
+import { AngularFireLiteApp } from '../core.service';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/operator/first';
 
-
-import { FirebaseAppConfig } from '../core.module';
 import * as Ifirebase from 'firebase';
+
+
 const firebase = Ifirebase;
 
 @Injectable()
@@ -13,20 +16,36 @@ export class AngularFireLiteDatabase {
 
   public fb;
 
-  constructor(public config: FirebaseAppConfig) {
-    this.fb = firebase.initializeApp(this.config);
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,
+              public config: AngularFireLiteApp,
+              public zone: NgZone) {
+    if (firebase.apps.length) {
+      this.fb = config.instance;
+    }
   }
-
 
   // ------------- Read -----------------//
 
   read(ref: string): Subject<any> {
-    const DATA = new Subject();
-    this.fb.database().ref(ref).on('value', (snapshot) => {
-      DATA.next(snapshot.val());
-    });
-    return DATA;
+    if (isPlatformServer(this.platformId) && firebase.apps.length) {
+      this.zone.runOutsideAngular(() => {
+        const DATA = new Subject();
+        this.fb.database().ref(ref).on('value', (snapshot) => {
+          DATA.next(snapshot.val());
+          DATA.first();
+          DATA.unsubscribe();
+        });
+        return DATA.asObservable();
+      });
+    } else if (isPlatformBrowser(this.platformId)) {
+      const DATA = new Subject();
+      this.fb.database().ref(ref).on('value', (snapshot) => {
+        DATA.next(snapshot.val());
+      });
+      return DATA;
+    }
   }
+
 
   childAdded(ref: string): Subject<any> {
     const CHILD_ADDED = new Subject();
