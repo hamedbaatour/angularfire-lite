@@ -17,9 +17,10 @@
 | Features              | AngularFire Lite         | AngularFire2  |
 | -------------         |:-------------:|         :-------------------:  |
 | Authentication        | :heavy_check_mark:    | :heavy_check_mark:     |
-| Firestore             | :heavy_check_mark:    |   :heavy_check_mark:   |
+| Firestore             | :heavy_check_mark:    |  :heavy_check_mark:   |
 | Storage               | :heavy_check_mark:    |  :x:                   |
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
+| Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
 | Size                  | :N/A:                 |  :N/A:                 |
 
@@ -73,7 +74,7 @@ export const environment = {
 **How?**: 
 - Import the config object we created from `enviroment.ts`
 
-- Imoprt `AngularFireLite` and pass it the config object
+- Import `AngularFireLite` and pass it the config object
 
 ```ts
 import { AngularFireLite } from 'angularfire-lite';
@@ -129,4 +130,4 @@ Why add uncessary complixity when simplicity darws a straight line to productivi
 
 - **Why the there are no tests?**
 
-people just follow the lead of others when most of the time the context does not fit. So no tests!
+currenty the demo is our primary test but might write tests in the future.
