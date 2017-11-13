@@ -1,4 +1,4 @@
-[![angularfire-lite-illustration](https://cdn.rawgit.com/hamedbaatour/ffd1020004cd8adc14535cebc53fc442/raw/35f9112d318137595cbbcb5651d50e7e0fd3094a/ANGULAR%2520FIRE%2520ILLUSTARTION%25201.svg)](#)
+[![angularfire-lite-illustration](https://cdn.rawgit.com/hamedbaatour/ffd1020004cd8adc14535cebc53fc442/raw/086c6a7a5312ca326a0dc4582e98659865f3c6a3/ANGULAR%2520FIRE%2520ILLUSTARTION.svg)](#)
 
 <p align="center">
   <h1 align="center">AngularFire Lite</h1>
