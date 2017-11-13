@@ -4,22 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireLiteApp } from '../core.service';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
-
 import 'rxjs/add/observable/fromPromise';
 
-import * as Ifirebase from 'firebase';
-const firebase = Ifirebase;
 
 
 @Injectable()
 export class AngularFireLiteAuth {
   public fb;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, public config: AngularFireLiteApp) {
-    if (firebase.apps.length) {
+  constructor(@Inject(PLATFORM_ID) public platformId: Object,
+              public config: AngularFireLiteApp) {
       this.fb = config.instance;
-    }
-
   }
 
 

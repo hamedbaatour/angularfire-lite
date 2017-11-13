@@ -2,8 +2,6 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { AngularFireLiteApp } from '../core.service';
-import * as Ifirebase from 'firebase';
-const firebase = Ifirebase;
 
 @Injectable()
 export class AngularFireLiteMessaging {
@@ -11,11 +9,7 @@ export class AngularFireLiteMessaging {
   public fb;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, public config: AngularFireLiteApp) {
-
-    if (firebase.apps.length) {
-      this.fb = config.instance;
-    }
-
+    this.fb = config.instance;
   }
 
 
