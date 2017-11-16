@@ -1,7 +1,7 @@
 {
   "name": "angularfire-packagr",
   "version": "0.0.1",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "build": "ng-packagr"
   },

@@ -17,12 +17,11 @@ export class AngularFireLiteDatabase {
               public config: FirebaseAppConfig,
               public http: HttpClient) {
     this.fb = app.instance;
-
   }
 
   // ------------- Read -----------------//
 
-  read(ref: string): Subject<any> | Observable<any> {
+  read(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
@@ -35,7 +34,7 @@ export class AngularFireLiteDatabase {
     }
   }
 
-  childAdded(ref: string): Subject<any> | Observable<any> {
+  childAdded(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
@@ -46,9 +45,10 @@ export class AngularFireLiteDatabase {
       });
       return CHILD_ADDED;
     }
+
   }
 
-  childChanged(ref: string): Subject<any> | Observable<any> {
+  childChanged(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
@@ -58,10 +58,11 @@ export class AngularFireLiteDatabase {
         CHILD_CHANGED.next(snapshot.val());
       });
       return CHILD_CHANGED;
+
     }
   }
 
-  childRemoved(ref: string): Subject<any> | Observable<any> {
+  childRemoved(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
@@ -72,13 +73,28 @@ export class AngularFireLiteDatabase {
       });
       return CHILD_REMOVED;
     }
+
   }
+
+  childMoved(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
+    if (isPlatformServer(this.platformId)) {
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
+    }
+    if (isPlatformBrowser(this.platformId)) {
+      const CHILD_MOVED = new Subject();
+      this.fb.database().ref(ref).once('child_moved', (snapshot) => {
+        CHILD_MOVED.next(snapshot.val());
+      });
+      return CHILD_MOVED;
+    }
+  }
+
 
   // ------------- Write -----------------//
 
   write(ref: string, data: Object): Observable<any> {
     if (isPlatformServer(this.platformId)) {
-      return this.http.put(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=`, data);
+      return this.http.put(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (isPlatformBrowser(this.platformId)) {
       return Observable.fromPromise(this.fb.database().ref(ref).set(data));
@@ -87,7 +103,7 @@ export class AngularFireLiteDatabase {
 
   push(ref: string, data: any): Observable<any> {
     if (isPlatformServer(this.platformId)) {
-      return this.http.post(`https://${this.config.projectId}.firebaseio.com/${ref}.json`, data);
+      return this.http.post(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (isPlatformBrowser(this.platformId)) {
       return Observable.fromPromise(this.fb.database().ref(ref).push(data));
@@ -96,7 +112,7 @@ export class AngularFireLiteDatabase {
 
   update(ref: string, data: any): Observable<any> {
     if (isPlatformServer(this.platformId)) {
-      return this.http.patch(`https://${this.config.projectId}.firebaseio.com/${ref}.json`, data);
+      return this.http.patch(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (isPlatformBrowser(this.platformId)) {
       return Observable.fromPromise(this.fb.database().ref(ref).update(data));
@@ -105,7 +121,7 @@ export class AngularFireLiteDatabase {
 
   // ------------- Delete -----------------//
 
-  remove(ref: string) {
+  remove(ref: string): Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.delete(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
@@ -114,8 +130,94 @@ export class AngularFireLiteDatabase {
     }
   }
 
+
   // ------------- Query -----------------//
 
-  // TODO: Query
+
+  query(ref: string): IQuery {
+
+    const HTTP = this.http;
+    const CONFIG = this.config;
+
+    return {
+      RESTQuery: '',
+
+      orderByChild(query: string): IQuery {
+        this.RESTQuery += `&orderBy="${query}"`;
+        return this;
+      },
+
+      orderByKey(): IQuery {
+        this.RESTQuery += `&orderBy="$key"`;
+        return this;
+      },
+
+
+      orderByPriority(): IQuery {
+        this.RESTQuery += `&orderBy="$priority"`;
+        return this;
+      },
+
+      orderByValue(): IQuery {
+        this.RESTQuery += `&orderBy="$value"`;
+        return this;
+      },
+
+      startAt(query: number | string | boolean | null): IQuery {
+        this.RESTQuery += `&startAt=${query}`;
+        return this;
+      },
+
+      endAt(query: number | string | boolean | null): IQuery {
+        this.RESTQuery += `&endAt=${query}`;
+        return this;
+      },
+
+      equalTo(query: number | string | boolean | null): IQuery {
+        this.RESTQuery += `&equalTo=${query}`;
+        return this;
+      },
+
+      limitToFirst(limit: number): IQuery {
+        this.RESTQuery += `&limitToFirst=${limit}`;
+        return this;
+      },
+
+      limitToLast(limit: number): IQuery {
+        this.RESTQuery += `&limitToLast=${limit}`;
+        return this;
+      },
+
+      run(): Observable<any> {
+        return HTTP.get(`https://${CONFIG.projectId}.firebaseio.com/${ref}.json?${this.RESTQuery}`);
+      }
+    };
+  };
+
+}
+
+export interface IQuery {
+
+  RESTQuery: string;
+
+  run(): Observable<any>;
+
+  orderByChild(query: string): IQuery;
+
+  orderByKey(): IQuery;
+
+  orderByPriority(): IQuery;
+
+  orderByValue(): IQuery;
+
+  startAt(query: number | string | boolean | null): IQuery;
+
+  endAt(query: number | string | boolean | null): IQuery;
+
+  equalTo(query: number | string | boolean | null): IQuery;
+
+  limitToFirst(limit: number): IQuery;
+
+  limitToLast(limit: number): IQuery;
 
 }
