@@ -103,6 +103,12 @@ export class AppModule { }
 
 - **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some useful addtions.
 
+<h3 align="center">:warning: In Progress :construction:</h3>
+
+<h4 align="center">Full Documentation</h4>
+<h4 align="center">Practical Examples</h4>
+
+<br>
 
 [![angularfire-lite-faq](https://cdn.rawgit.com/hamedbaatour/fbbd36bce4d7e5a4ec0e07b71b71db15/raw/d58da0f50d52c27815832f7587b29d5b3d58eb3f/FAQ.svg)](#)
 
@@ -131,3 +137,17 @@ Why add uncessary complixity when simplicity darws a straight line to productivi
 - **Why the there are no tests?**
 
 currenty the demo is our primary test but might write tests in the future.
+
+<br>
+
+[![angularfire-lite-credits](https://cdn.rawgit.com/hamedbaatour/fe2002a2acbdd15f3067b344de7eda3c/raw/bdfb13d1d75e4c99b5603523ee2f7cba29bcd92b/credits.svg)](#)
+
+
+### Author:
+___
+<img src="https://cdn.rawgit.com/hamedbaatour/27ab12e194a559d3a7b5927565c37546/raw/d458447bd7099b8cfb89572cef2545238435f62d/Angularfire-lite%2520author.svg" alt="angularfirelite-author" width="400px" height="500px">
+
+### Maintainers:
+___
+
+Doors are open! I will personally design for you a maintainer card just like the one above too :wink:
