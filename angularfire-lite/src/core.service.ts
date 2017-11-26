@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 
-import * as Ifirebase from 'firebase';
+import * as fire from 'firebase';
 import { FirebaseAppConfig } from './core.module';
+import { app } from 'firebase/app';
 
-const firebase = Ifirebase;
-
+const firebase = fire;
 
 @Injectable()
 export class AngularFireLiteApp {
-  firebaseApp;
-
-  constructor(public config: FirebaseAppConfig) {
-    if (!firebase.apps.length) {
-        this.firebaseApp = firebase.initializeApp(config);
-    }
+  constructor(private appConfig: FirebaseAppConfig) {
   }
 
-  get instance() {
+  public instance(): app.App {
+    let firebaseApp: app.App;
     if (!firebase.apps.length) {
-      this.firebaseApp = firebase.initializeApp(this.config);
+      firebaseApp = firebase.initializeApp(this.appConfig) as app.App;
+    } else {
+      firebaseApp = firebase.app();
     }
-    return this.firebaseApp;
+    return firebaseApp;
   }
 
+  public config() {
+    return this.appConfig;
+  }
 }

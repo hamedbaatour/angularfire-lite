@@ -1,24 +1,29 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformServer } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
+
+import { firestore } from 'firebase/app';
+
 
 @Injectable()
 export class AngularFireLiteFirestore {
 
-  public fb;
+  private readonly firestore: firestore.Firestore;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, public config: AngularFireLiteApp) {
-      this.fb = config.instance;
+  constructor(private app: AngularFireLiteApp) {
+    this.firestore = app.instance().firestore();
   }
 
-  //
-  // doc = {
-  //   set: (collection, document) => {
-  //     this.fb.firestore()
-  //   },
-  //   add:,
-  //   update:
-  // };
+
+  read(path: string) {
+    const DATA = new Subject();
+    this.firestore.doc(path).onSnapshot((snapshot) => {
+      DATA.next(snapshot.data());
+    });
+    return DATA;
+  }
 
 
 }
+
+

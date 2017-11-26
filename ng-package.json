@@ -6,7 +6,13 @@
   "lib": {
     "entryFile": "src/public_api.ts",
     "externals": {
-      "firebase": "firebase"
+      "firebase": "firebase",
+      "firebase/app": "firebase/app",
+      "firebase/auth": "firebase/auth",
+      "firebase/database": "firebase/database",
+      "firebase/firestore": "firebase/firestore",
+      "firebase/storage": "firebase/storage",
+      "firebase/messaging": "firebase/messaging"
     }
   }
 }

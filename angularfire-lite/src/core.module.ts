@@ -1,11 +1,18 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AngularFireLiteApp } from './core.service';
 import { AngularFireLiteAuth } from './auth/auth.service';
 import { AngularFireLiteDatabase } from './database/database.service';
 import { AngularFireLiteFirestore } from './firestore/firestore.service';
 import { AngularFireLiteStorage } from './storage/storage.service';
 import { AngularFireLiteMessaging } from './messaging/messaging.service';
-import { AngularFireLiteApp } from './core.service';
-import {HttpClientModule} from '@angular/common/http';
+
+
+export function AngularFireLiteAppFactory(config: FirebaseAppConfig) {
+  return new AngularFireLiteApp(config);
+}
 
 export class FirebaseAppConfig {
   apiKey?: string;
@@ -16,31 +23,29 @@ export class FirebaseAppConfig {
   projectId?: string;
 }
 
-export function AngularFireLiteAppFactory(config: FirebaseAppConfig) {
-  return new AngularFireLiteApp(config);
-}
-
-@NgModule({})
+@NgModule({
+  imports: [
+    HttpClientModule,
+    CommonModule,
+  ]
+})
 export class AngularFireLite {
 
-
-  public static forRoot(config: FirebaseAppConfig): ModuleWithProviders {
-
+  public static forRoot(fireConfig): ModuleWithProviders {
     return {
       ngModule: AngularFireLite,
       providers: [
-        {provide: FirebaseAppConfig, useValue: config},
+        {provide: FirebaseAppConfig, useValue: fireConfig},
         {
           provide: AngularFireLiteApp,
           useFactory: AngularFireLiteAppFactory,
-          deps: [FirebaseAppConfig],
+          deps: [ FirebaseAppConfig ]
         },
-        AngularFireLiteAuth,
         AngularFireLiteDatabase,
+        AngularFireLiteAuth,
         AngularFireLiteFirestore,
         AngularFireLiteStorage,
-        AngularFireLiteMessaging,
-        HttpClientModule
+        AngularFireLiteMessaging
       ]
     };
   }

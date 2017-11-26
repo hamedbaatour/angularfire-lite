@@ -1,43 +1,51 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformServer } from '@angular/common';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
+import { fromPromise } from 'rxjs/observable/fromPromise';
+
+import { messaging } from 'firebase/app';
+
 
 @Injectable()
 export class AngularFireLiteMessaging {
 
-  public fb;
+  private readonly messaging: messaging.Messaging;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, public config: AngularFireLiteApp) {
-    this.fb = config.instance;
+  constructor(private app: AngularFireLiteApp) {
+    this.messaging = app.instance().messaging();
   }
 
 
   // ------------- Getters -----------------//
 
   get instance() {
-    return this.fb.messaging();
+    return this.messaging;
   }
 
   get token(): Observable<any> {
-    return Observable.fromPromise(this.fb.messaging().getToken());
+    return fromPromise(this.messaging.getToken());
   }
 
-  get tokenRefresh(): Observable<any> {
-    return this.fb.messaging().onMessage(() => {
-      return Observable.fromPromise(this.fb.messaging().getToken());
+  get tokenRefresh(): Subject<any> {
+    const REFRESH_TOKEN = new Subject();
+    this.messaging.onMessage(() => {
+      this.messaging.getToken().then((token) => {
+        REFRESH_TOKEN.next(token);
+      });
     });
+    return REFRESH_TOKEN;
   }
 
 
   // ------------- Actions -----------------//
 
   requestPermission(): Observable<any> {
-    return Observable.fromPromise(this.fb.messaging().requestPermission());
+    return fromPromise(this.messaging.requestPermission());
   }
 
   deleteToken(token: string): Observable<any> {
-    return Observable.fromPromise((this.fb.messaging().deleteToken(token)));
+    return fromPromise((this.messaging.deleteToken(token)));
   }
 
 

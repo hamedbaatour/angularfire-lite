@@ -1,54 +1,52 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformServer } from '@angular/common';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
-import 'rxjs/add/observable/fromPromise';
-import * as Ifirebase from 'firebase';
-const firebase = Ifirebase;
+import { fromPromise } from 'rxjs/observable/fromPromise';
+
+import { storage } from 'firebase/app';
+import 'firebase/storage';
+
 
 @Injectable()
 export class AngularFireLiteStorage {
 
-  public fb;
+  private readonly storage: storage.Storage;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, public config: AngularFireLiteApp) {
-
-    if (firebase.apps.length) {
-      this.fb = config.instance;
-    }
-
+  constructor(private app: AngularFireLiteApp) {
+    this.storage = app.instance().storage();
   }
 
+  // TODO: Add Server Side Rendering Support Using The GCS REST API
 
   // ------------- Upload -----------------//
 
   upload(ref: string, file: File | Blob | Uint8Array, metadata?: Object): Observable<any> {
-    return Observable.fromPromise(this.fb.storage().ref().child(ref).put(file, metadata));
+    return fromPromise(this.storage.ref().child(ref).put(file, metadata));
   }
 
   uploadString(ref: string, string: string): Observable<any> {
-    return Observable.fromPromise(this.fb.storage().ref().child(ref).putString(string));
+    return fromPromise(this.storage.ref().child(ref).putString(string));
   }
 
   // ------------- Download -----------------//
 
   download(ref: string): Observable<any> {
-    return Observable.fromPromise(this.fb.storage().ref().child(ref).getDownloadURL());
+    return fromPromise(this.storage.ref().child(ref).getDownloadURL());
   }
 
 
   // ------------- Delete -----------------//
 
   remove(ref): Observable<any> {
-    return Observable.fromPromise(this.fb.storage().ref().child(ref).delete());
+    return fromPromise(this.storage.ref().child(ref).delete());
   }
 
   // ------------- Metadata -----------------//
 
   getMetadata(ref: string): Subject<any> {
     const META = new Subject();
-    this.fb.storage().ref().child(ref).getMetadata().then((meta) => {
+    this.storage.ref().child(ref).getMetadata().then((meta) => {
       META.next(meta);
     });
     return META;
@@ -56,11 +54,11 @@ export class AngularFireLiteStorage {
 
 
   updateMetadata(ref: string, metadata: Object): Observable<any> {
-    return Observable.fromPromise(this.fb.storage().ref().child(ref).updateMetadata(metadata));
+    return fromPromise(this.storage.ref().child(ref).updateMetadata(metadata));
   }
 
   deleteMetadata(ref: string): Observable<any> {
-    return Observable.fromPromise(this.fb.storage().ref().child(ref).updateMetadata({
+    return fromPromise(this.storage.ref().child(ref).updateMetadata({
       customMetadata: null,
       cacheControl: null,
       contentEncoding: null,

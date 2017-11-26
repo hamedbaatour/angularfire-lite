@@ -1,46 +1,50 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
-import { FirebaseAppConfig } from '../core.module';
+import { HttpClient } from '@angular/common/http';
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+
+import { database } from 'firebase/app';
+
 
 
 @Injectable()
 export class AngularFireLiteDatabase {
 
-  public fb;
+  private readonly database: database.Database;
+  private readonly config;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,
-              public app: AngularFireLiteApp,
-              public config: FirebaseAppConfig,
-              public http: HttpClient) {
-    this.fb = app.instance;
+  constructor(private app: AngularFireLiteApp,
+              private http: HttpClient,
+              @Inject(PLATFORM_ID) private platformId: Object) {
+    this.database = app.instance().database();
+    this.config = app.config();
   }
 
   // ------------- Read -----------------//
 
-  read(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
+  read(ref: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
-    }
+     }
     if (isPlatformBrowser(this.platformId)) {
       const VALUE = new Subject();
-      this.fb.database().ref(ref).on('value', (snapshot) => {
+      this.database.ref(ref).on('value', (snapshot) => {
         VALUE.next(snapshot.val());
       });
       return VALUE;
     }
   }
 
-  childAdded(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
+  childAdded(ref: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
     if (isPlatformBrowser(this.platformId)) {
       const CHILD_ADDED = new Subject();
-      this.fb.database().ref(ref).on('child_added', (snapshot) => {
+      this.database.ref(ref).on('child_added', (snapshot) => {
         CHILD_ADDED.next(snapshot.val());
       });
       return CHILD_ADDED;
@@ -48,13 +52,13 @@ export class AngularFireLiteDatabase {
 
   }
 
-  childChanged(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
+  childChanged(ref: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
     if (isPlatformBrowser(this.platformId)) {
       const CHILD_CHANGED = new Subject();
-      this.fb.database().ref(ref).on('child_changed', (snapshot) => {
+      this.database.ref(ref).on('child_changed', (snapshot) => {
         CHILD_CHANGED.next(snapshot.val());
       });
       return CHILD_CHANGED;
@@ -62,13 +66,13 @@ export class AngularFireLiteDatabase {
     }
   }
 
-  childRemoved(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
+  childRemoved(ref: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
     if (isPlatformBrowser(this.platformId)) {
       const CHILD_REMOVED = new Subject();
-      this.fb.database().ref(ref).on('child_removed', (snapshot) => {
+      this.database.ref(ref).on('child_removed', (snapshot) => {
         CHILD_REMOVED.next(snapshot.val());
       });
       return CHILD_REMOVED;
@@ -76,13 +80,13 @@ export class AngularFireLiteDatabase {
 
   }
 
-  childMoved(ref: string, SSRQuery?: string): Subject<any> | Observable<any> {
+  childMoved(ref: string): Subject<any> | Observable<any> {
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
     if (isPlatformBrowser(this.platformId)) {
       const CHILD_MOVED = new Subject();
-      this.fb.database().ref(ref).once('child_moved', (snapshot) => {
+      this.database.ref(ref).once('child_moved', (snapshot) => {
         CHILD_MOVED.next(snapshot.val());
       });
       return CHILD_MOVED;
@@ -97,7 +101,7 @@ export class AngularFireLiteDatabase {
       return this.http.put(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (isPlatformBrowser(this.platformId)) {
-      return Observable.fromPromise(this.fb.database().ref(ref).set(data));
+      return fromPromise(this.database.ref(ref).set(data));
     }
   }
 
@@ -106,7 +110,7 @@ export class AngularFireLiteDatabase {
       return this.http.post(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (isPlatformBrowser(this.platformId)) {
-      return Observable.fromPromise(this.fb.database().ref(ref).push(data));
+      return fromPromise(this.database.ref(ref).push(data));
     }
   }
 
@@ -115,7 +119,7 @@ export class AngularFireLiteDatabase {
       return this.http.patch(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (isPlatformBrowser(this.platformId)) {
-      return Observable.fromPromise(this.fb.database().ref(ref).update(data));
+      return fromPromise(this.database.ref(ref).update(data));
     }
   }
 
@@ -126,7 +130,7 @@ export class AngularFireLiteDatabase {
       return this.http.delete(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
     if (isPlatformBrowser(this.platformId)) {
-      return Observable.fromPromise(this.fb.database().ref(ref).remove());
+      return fromPromise(this.database.ref(ref).remove());
     }
   }
 
