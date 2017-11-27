@@ -4,10 +4,12 @@ import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
 import { HttpClient } from '@angular/common/http';
 import { fromPromise } from 'rxjs/observable/fromPromise';
+import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 import { database } from 'firebase/app';
-
+import 'rxjs/add/operator/do';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 
 @Injectable()
@@ -18,6 +20,7 @@ export class AngularFireLiteDatabase {
 
   constructor(private app: AngularFireLiteApp,
               private http: HttpClient,
+              private state: TransferState,
               @Inject(PLATFORM_ID) private platformId: Object) {
     this.database = app.instance().database();
     this.config = app.config();
@@ -26,11 +29,16 @@ export class AngularFireLiteDatabase {
   // ------------- Read -----------------//
 
   read(ref: string): Subject<any> | Observable<any> {
+    const dataStateKey = makeStateKey<Object>('rtd');
     if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
-     }
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+        .do((payload) => {
+          this.state.set(dataStateKey, payload);
+        });
+    }
     if (isPlatformBrowser(this.platformId)) {
-      const VALUE = new Subject();
+      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const VALUE = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('value', (snapshot) => {
         VALUE.next(snapshot.val());
       });
@@ -39,11 +47,16 @@ export class AngularFireLiteDatabase {
   }
 
   childAdded(ref: string): Subject<any> | Observable<any> {
+    const dataStateKey = makeStateKey<Object>('childAdded');
     if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+        .do((payload) => {
+          this.state.set(dataStateKey, payload);
+        });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const CHILD_ADDED = new Subject();
+      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const CHILD_ADDED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('child_added', (snapshot) => {
         CHILD_ADDED.next(snapshot.val());
       });
@@ -53,11 +66,16 @@ export class AngularFireLiteDatabase {
   }
 
   childChanged(ref: string): Subject<any> | Observable<any> {
+    const dataStateKey = makeStateKey<Object>('childChanged');
     if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+        .do((payload) => {
+          this.state.set(dataStateKey, payload);
+        });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const CHILD_CHANGED = new Subject();
+      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const CHILD_CHANGED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('child_changed', (snapshot) => {
         CHILD_CHANGED.next(snapshot.val());
       });
@@ -67,11 +85,16 @@ export class AngularFireLiteDatabase {
   }
 
   childRemoved(ref: string): Subject<any> | Observable<any> {
+    const dataStateKey = makeStateKey<Object>('childRemoved');
     if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+        .do((payload) => {
+          this.state.set(dataStateKey, payload);
+        });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const CHILD_REMOVED = new Subject();
+      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const CHILD_REMOVED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('child_removed', (snapshot) => {
         CHILD_REMOVED.next(snapshot.val());
       });
@@ -81,11 +104,16 @@ export class AngularFireLiteDatabase {
   }
 
   childMoved(ref: string): Subject<any> | Observable<any> {
+    const dataStateKey = makeStateKey<Object>('childMoved');
     if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+        .do((payload) => {
+          this.state.set(dataStateKey, payload);
+        });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const CHILD_MOVED = new Subject();
+      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const CHILD_MOVED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).once('child_moved', (snapshot) => {
         CHILD_MOVED.next(snapshot.val());
       });

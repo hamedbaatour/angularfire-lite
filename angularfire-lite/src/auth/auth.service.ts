@@ -26,8 +26,14 @@ export class AngularFireLiteAuth {
 
   uid(): Subject<any> {
     const UID = new Subject();
-    this.auth.onAuthStateChanged((user) => {
-      UID.next(user.uid);
+    this.isAuthenticated().subscribe((isAuth) => {
+      if (isAuth) {
+        this.auth.onAuthStateChanged((user) => {
+          UID.next(user.uid);
+        });
+      } else {
+        UID.next(null);
+      }
     });
     return UID;
   }

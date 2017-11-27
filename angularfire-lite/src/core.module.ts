@@ -1,6 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserTransferStateModule } from '@angular/platform-browser';
 
 import { AngularFireLiteApp } from './core.service';
 import { AngularFireLiteAuth } from './auth/auth.service';
@@ -27,6 +28,7 @@ export class FirebaseAppConfig {
   imports: [
     HttpClientModule,
     CommonModule,
+    BrowserTransferStateModule
   ]
 })
 export class AngularFireLite {

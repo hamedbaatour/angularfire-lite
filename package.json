@@ -11,19 +11,20 @@
   },
   "private": false,
   "dependencies": {
-    "@angular/common": "~5.0.0",
-    "@angular/compiler": "~5.0.0",
-    "@angular/core": "~5.0.0",
-    "@angular/http": "~5.0.0",
+    "@angular/common": "^5.0.3",
+    "@angular/compiler": "^5.0.3",
+    "@angular/core": "^5.0.3",
+    "@angular/http": "^5.0.3",
+    "@angular/platform-browser": "^5.0.3",
+    "@angular/platform-server": "^5.0.3",
     "firebase": "^4.6.2",
-    "rxjs": "^5.4.2",
-    "tslib": "^1.8.0",
+    "rxjs": "^5.5.2",
     "zone.js": "^0.8.18"
   },
   "devDependencies": {
-    "@angular/compiler-cli": "~5.0.0",
+    "@angular/compiler-cli": "^5.0.3",
     "ng-packagr": "^2.0.0-rc.3",
-    "typescript": "~2.4.2",
+    "typescript": "^2.6.1",
     "tslint": "^5.8.0"
   }
 }

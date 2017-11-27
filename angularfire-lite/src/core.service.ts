@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import * as fire from 'firebase';
 import { FirebaseAppConfig } from './core.module';
 import { app } from 'firebase/app';
-
 const firebase = fire;
 
 @Injectable()
