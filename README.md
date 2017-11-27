@@ -22,7 +22,25 @@
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
-| Size                  | :N/A:                 |  :N/A:                 |
+| Size                  |  N/A                  |   N/A                 |
+
+[![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/3e300f5043822fb52470ee947ed8adab0c17034d/SSR.svg)](#)
+### Finally SSR with Firebase!
+___
+
+Angularfire Lite is the very first angular library to support server side rendering with firebase.
+<br>
+<br>
+ - :file_folder: **Supports Both Firebase Databases: Firestore & Realtime Database**
+ 
+ 
+ - :tada: **No Flickering whatsoever when the app bootstraps**
+ 
+ - :zap:  **Better performance**
+ 
+ - :mag: **Search engine optimization** 
+  
+ - :relaxed: **Easy implementation**
 
 <p></p>
 <p align="center">
@@ -101,7 +119,7 @@ export class AppModule { }
 
 - **Observable based**: Every function returns an Observable that you should subscribe to it to get back the data.
 
-- **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some useful addtions.
+- **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some simple additions.
 
 <h3 align="center">:warning: In Progress :construction:</h3>
 
@@ -131,7 +149,7 @@ We want to keep AngularFire Lite in sync with the Firebase API so if any new fea
 - **Why AngularFire Lite is so simple?**
 
 
-Why add uncessary complixity when simplicity darws a straight line to productivity.
+Why add unnecessary complexity in simplicity draws a straight line to productivity.
 
 
 - **Why the there are no tests?**
@@ -140,12 +158,12 @@ currenty the demo is our primary test but might write tests in the future.
 
 <br>
 
-[![angularfire-lite-credits](https://cdn.rawgit.com/hamedbaatour/fe2002a2acbdd15f3067b344de7eda3c/raw/bdfb13d1d75e4c99b5603523ee2f7cba29bcd92b/credits.svg)](#)
+[![angularfire-lite-credits](https://cdn.rawgit.com/hamedbaatour/fe2002a2acbdd15f3067b344de7eda3c/raw/3f3cb82cc4d528cc468be349ee5378b20c7c5a24/credits.svg)](#)
 
 
 ### Author:
 ___
-<img src="https://cdn.rawgit.com/hamedbaatour/27ab12e194a559d3a7b5927565c37546/raw/d458447bd7099b8cfb89572cef2545238435f62d/Angularfire-lite%2520author.svg" alt="angularfirelite-author" width="400px" height="500px">
+<img src="https://cdn.rawgit.com/hamedbaatour/27ab12e194a559d3a7b5927565c37546/raw/aa1ba13147638743a84057f559aff5aedb824ef0/Angularfire-lite%2520author.svg" alt="angularfirelite-author" width="400px" height="500px">
 
 ### Maintainers:
 ___
