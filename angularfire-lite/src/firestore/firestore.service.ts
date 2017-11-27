@@ -3,7 +3,7 @@ import { AngularFireLiteApp } from '../core.service';
 import { HttpClient } from '@angular/common/http';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { Observable } from 'rxjs/Observable';
-import { FirebaseAppConfig } from '../../dist/core.module';
+import { FirebaseAppConfig } from '../core.module';
 import { TransferState, makeStateKey } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import 'rxjs/add/operator/map';
@@ -58,7 +58,7 @@ export class AngularFireLiteFirestore {
     }
   }
 
-  
+
   // ------------- Write -----------------//
 
   // write(ref: string, data: Object): Observable<any> {
