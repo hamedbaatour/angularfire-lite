@@ -152,7 +152,7 @@ We want to keep AngularFire Lite in sync with the Firebase API so if any new fea
 Why add unnecessary complexity in simplicity draws a straight line to productivity.
 
 
-- **Why the there are no tests?**
+- **Why there are no tests?**
 
 currenty the demo is our primary test but might write tests in the future.
 
