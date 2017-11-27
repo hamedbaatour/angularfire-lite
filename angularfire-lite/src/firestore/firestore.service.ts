@@ -58,7 +58,7 @@ export class AngularFireLiteFirestore {
     }
   }
 
-
+  
   // ------------- Write -----------------//
 
   // write(ref: string, data: Object): Observable<any> {
