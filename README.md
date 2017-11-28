@@ -139,10 +139,9 @@ For now please use the Demo App as guide to get you started as I finish designin
 ### Users
 ___
 
-- **Why don't just use the native Firebase API?**
+- **Will be there any breaking changes to AngularFire Lite?**
 
-
-If you use the native Firebase API directly Angular change detection will not fire in other words nothing will update in screen when data changes.
+AngularFire Lite is still in beta so some major changes could happen however we will try to avoid that as much as possible and keep the API consistent across all the firebase services provided.
 
 
 ### Contributors:
