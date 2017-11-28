@@ -22,6 +22,7 @@
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
+| Size                   | N/A                  | N/A                    |
 
 [![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/3e300f5043822fb52470ee947ed8adab0c17034d/SSR.svg)](#)
 ### Finally SSR with Firebase!
@@ -127,6 +128,12 @@ export class AppModule { }
 
 <br>
 
+For now please use the Demo App as guide to get you started as I finish designing the new docs so check it out:
+
+<h3 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-demo"> -> DEMO <- </a></h3>
+
+<br>
+
 [![angularfire-lite-faq](https://cdn.rawgit.com/hamedbaatour/fbbd36bce4d7e5a4ec0e07b71b71db15/raw/d58da0f50d52c27815832f7587b29d5b3d58eb3f/FAQ.svg)](#)
 
 ### Users
@@ -153,7 +160,7 @@ Why add unnecessary complexity in simplicity draws a straight line to productivi
 
 - **Why there are no tests?**
 
-currenty the demo is our primary test but might write tests in the future.
+currenty the demo is our primary test but there will be proper tests in the future.
 
 <br>
 
