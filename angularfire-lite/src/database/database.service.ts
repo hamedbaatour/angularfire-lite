@@ -4,12 +4,13 @@ import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
 import { HttpClient } from '@angular/common/http';
 import { fromPromise } from 'rxjs/observable/fromPromise';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
-import { database } from 'firebase/app';
 import 'rxjs/add/operator/do';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+import { database } from 'firebase/app';
 
 
 @Injectable()
