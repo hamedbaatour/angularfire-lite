@@ -22,7 +22,6 @@
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
-| Size                  |  N/A                  |   N/A                 |
 
 [![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/3e300f5043822fb52470ee947ed8adab0c17034d/SSR.svg)](#)
 ### Finally SSR with Firebase!
