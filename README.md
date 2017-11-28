@@ -130,8 +130,11 @@ export class AppModule { }
 
 For now please use the Demo App as guide to get you started as I finish designing the new docs so check it out:
 
+<br>
+
 <h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-demo"> DEMO APP </a></h2>
 
+<br>
 <br>
 
 [![angularfire-lite-faq](https://cdn.rawgit.com/hamedbaatour/fbbd36bce4d7e5a4ec0e07b71b71db15/raw/d58da0f50d52c27815832f7587b29d5b3d58eb3f/FAQ.svg)](#)
