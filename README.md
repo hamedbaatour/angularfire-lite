@@ -163,7 +163,7 @@ currenty the demo is our primary test but might write tests in the future.
 
 ### Author:
 ___
-<img src="https://cdn.rawgit.com/hamedbaatour/27ab12e194a559d3a7b5927565c37546/raw/aa1ba13147638743a84057f559aff5aedb824ef0/Angularfire-lite%2520author.svg" alt="angularfirelite-author" width="400px" height="500px">
+<img src="https://cdn.rawgit.com/hamedbaatour/27ab12e194a559d3a7b5927565c37546/raw/bef25d518d9ed8f0781ca8a3edfd58f6691ef7ad/Angularfire-lite%2520author.svg" alt="angularfirelite-author" width="400px" height="500px">
 
 ### Maintainers:
 ___
