@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
-import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/map';
 
 import { database } from 'firebase/app';
 
@@ -30,93 +30,170 @@ export class AngularFireLiteDatabase {
   // ------------- Read -----------------//
 
   read(ref: string): Subject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>('rtd');
+    const dataStateKey = makeStateKey<Object | Array<any>>(ref);
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .do((payload) => {
-          this.state.set(dataStateKey, payload);
+        .map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [ payload[ key ] ];
+            });
+            this.state.set(dataStateKey, result);
+            return result;
+          } else {
+            this.state.set(dataStateKey, payload);
+            return payload;
+          }
         });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const SSRedValue = this.state.get(dataStateKey, []);
       const VALUE = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('value', (snapshot) => {
-        VALUE.next(snapshot.val());
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [ snapshot.val()[ key ] ];
+          });
+          VALUE.next(result);
+        } else {
+          VALUE.next(snapshot.val());
+        }
       });
       return VALUE;
     }
   }
 
   childAdded(ref: string): Subject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>('childAdded');
+    const dataStateKey = makeStateKey<Object>(ref);
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .do((payload) => {
-          this.state.set(dataStateKey, payload);
+        .map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [ payload[ key ] ];
+            });
+            this.state.set(dataStateKey, result);
+            return result;
+          } else {
+            this.state.set(dataStateKey, payload);
+            return payload;
+          }
         });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const SSRedValue = this.state.get(dataStateKey, []);
       const CHILD_ADDED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('child_added', (snapshot) => {
-        CHILD_ADDED.next(snapshot.val());
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [ snapshot.val()[ key ] ];
+          });
+          CHILD_ADDED.next(result);
+        } else {
+          CHILD_ADDED.next(snapshot.val());
+        }
       });
       return CHILD_ADDED;
     }
-
   }
 
   childChanged(ref: string): Subject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>('childChanged');
+    const dataStateKey = makeStateKey<Object>(ref);
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .do((payload) => {
-          this.state.set(dataStateKey, payload);
+        .map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [ payload[ key ] ];
+            });
+            this.state.set(dataStateKey, result);
+            return result;
+          } else {
+            this.state.set(dataStateKey, payload);
+            return payload;
+          }
         });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const SSRedValue = this.state.get(dataStateKey, []);
       const CHILD_CHANGED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('child_changed', (snapshot) => {
-        CHILD_CHANGED.next(snapshot.val());
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [ snapshot.val()[ key ] ];
+          });
+          CHILD_CHANGED.next(result);
+        } else {
+          CHILD_CHANGED.next(snapshot.val());
+        }
       });
       return CHILD_CHANGED;
-
     }
   }
 
   childRemoved(ref: string): Subject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>('childRemoved');
+    const dataStateKey = makeStateKey<Object>(ref);
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .do((payload) => {
-          this.state.set(dataStateKey, payload);
+        .map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [ payload[ key ] ];
+            });
+            this.state.set(dataStateKey, result);
+            return result;
+          } else {
+            this.state.set(dataStateKey, payload);
+            return payload;
+          }
         });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const SSRedValue = this.state.get(dataStateKey, []);
       const CHILD_REMOVED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).on('child_removed', (snapshot) => {
-        CHILD_REMOVED.next(snapshot.val());
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [ snapshot.val()[ key ] ];
+          });
+          CHILD_REMOVED.next(result);
+        } else {
+          CHILD_REMOVED.next(snapshot.val());
+        }
       });
       return CHILD_REMOVED;
     }
-
   }
 
   childMoved(ref: string): Subject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>('childMoved');
+    const dataStateKey = makeStateKey<Object>(ref);
     if (isPlatformServer(this.platformId)) {
       return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .do((payload) => {
-          this.state.set(dataStateKey, payload);
+        .map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [ payload[ key ] ];
+            });
+            this.state.set(dataStateKey, result);
+            return result;
+          } else {
+            this.state.set(dataStateKey, payload);
+            return payload;
+          }
         });
     }
     if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+      const SSRedValue = this.state.get(dataStateKey, []);
       const CHILD_MOVED = new BehaviorSubject<any>(SSRedValue);
       this.database.ref(ref).once('child_moved', (snapshot) => {
-        CHILD_MOVED.next(snapshot.val());
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [ snapshot.val()[ key ] ];
+          });
+          CHILD_MOVED.next(result);
+        } else {
+          CHILD_MOVED.next(snapshot.val());
+        }
       });
       return CHILD_MOVED;
     }
@@ -229,6 +306,8 @@ export class AngularFireLiteDatabase {
 
 }
 
+// ------ Utils  -------
+
 export interface IQuery {
 
   RESTQuery: string;
@@ -253,4 +332,16 @@ export interface IQuery {
 
   limitToLast(limit: number): IQuery;
 
+}
+
+
+export function generateId() : string {
+  let id = '';
+  const possibleIds = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < 5; i++) {
+    id += possibleIds.charAt(Math.floor(Math.random() * possibleIds.length));
+  }
+
+  return id;
 }
