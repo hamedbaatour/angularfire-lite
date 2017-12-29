@@ -1,11 +1,11 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { AngularFireLiteApp } from '../core.service';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { isPlatformBrowser } from '@angular/common';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {AngularFireLiteApp} from '../core.service';
+import {fromPromise} from 'rxjs/observable/fromPromise';
+import {isPlatformBrowser} from '@angular/common';
 
-import { storage } from 'firebase/app';
+import {storage} from 'firebase/app';
 import 'firebase/storage';
 
 
@@ -13,6 +13,7 @@ import 'firebase/storage';
 export class AngularFireLiteStorage {
 
   private readonly storage: storage.Storage;
+  private readonly browser = isPlatformBrowser(this.platformId);
 
   constructor(private app: AngularFireLiteApp,
               @Inject(PLATFORM_ID) private platformId: Object) {
@@ -24,22 +25,22 @@ export class AngularFireLiteStorage {
   // ------------- Upload -----------------//
 
   upload(ref: string, file: File | Blob | Uint8Array, metadata?: Object): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.storage.ref().child(ref).put(file, metadata));
+    if (this.browser) {
+      return fromPromise(this.child(ref).put(file, metadata));
     }
   }
 
   uploadString(ref: string, string: string): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.storage.ref().child(ref).putString(string));
+    if (this.browser) {
+      return fromPromise(this.child(ref).putString(string));
     }
   }
 
   // ------------- Download -----------------//
 
   download(ref: string): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.storage.ref().child(ref).getDownloadURL());
+    if (this.browser) {
+      return fromPromise(this.child(ref).getDownloadURL());
     }
   }
 
@@ -47,17 +48,17 @@ export class AngularFireLiteStorage {
   // ------------- Delete -----------------//
 
   remove(ref): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.storage.ref().child(ref).delete());
+    if (this.browser) {
+      return fromPromise(this.child(ref).delete());
     }
   }
 
   // ------------- Metadata -----------------//
 
   getMetadata(ref: string): Subject<any> {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browser) {
       const META = new Subject();
-      this.storage.ref().child(ref).getMetadata().then((meta) => {
+      this.child(ref).getMetadata().then((meta) => {
         META.next(meta);
       });
       return META;
@@ -66,14 +67,14 @@ export class AngularFireLiteStorage {
 
 
   updateMetadata(ref: string, metadata: Object): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.storage.ref().child(ref).updateMetadata(metadata));
+    if (this.browser) {
+      return fromPromise(this.child(ref).updateMetadata(metadata));
     }
   }
 
   deleteMetadata(ref: string): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.storage.ref().child(ref).updateMetadata({
+    if (this.browser) {
+      return fromPromise(this.child(ref).updateMetadata({
         customMetadata: null,
         cacheControl: null,
         contentEncoding: null,
@@ -83,4 +84,9 @@ export class AngularFireLiteStorage {
     }
   }
 
+  private child(ref) {
+    return this.storage.ref().child(ref);
+  }
+
 }
+

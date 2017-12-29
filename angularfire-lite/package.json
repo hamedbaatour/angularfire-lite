@@ -1,6 +1,6 @@
 {
   "name": "angularfire-lite",
-  "version": "5.0.2-beta",
+  "version": "5.1.1-beta",
   "license": "Apache-2.0",
   "description": "Lightweight library to use Firebase API with Angular.",
   "author": "Hamed Baatour",
@@ -10,13 +10,13 @@
   },
   "private": false,
   "peerDependencies": {
-    "@angular/common": "^5.0.5",
-    "@angular/core": "^5.0.5",
-    "@angular/http": "^5.0.5",
-    "@angular/platform-browser": "^5.0.5",
-    "@angular/platform-server": "^5.0.5",
+    "@angular/common": "^5.0.0",
+    "@angular/core": "^5.0.0",
+    "@angular/http": "^5.0.0",
+    "@angular/platform-browser": "^5.0.0",
+    "@angular/platform-server": "^5.0.0",
     "firebase": "^4.6.2",
-    "rxjs": "^5.5.3",
+    "rxjs": "^5.5.0",
     "zone.js": "^0.8.18"
   }
 }

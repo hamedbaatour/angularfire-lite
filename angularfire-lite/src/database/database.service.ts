@@ -1,16 +1,15 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { AngularFireLiteApp } from '../core.service';
-import { HttpClient } from '@angular/common/http';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { makeStateKey, TransferState } from '@angular/platform-browser';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {AngularFireLiteApp} from '../core.service';
+import {HttpClient} from '@angular/common/http';
+import {fromPromise} from 'rxjs/observable/fromPromise';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {makeStateKey, TransferState} from '@angular/platform-browser';
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 
 import 'rxjs/add/operator/map';
 
-import { database } from 'firebase/app';
+import {database} from 'firebase/app';
 
 
 @Injectable()
@@ -18,6 +17,9 @@ export class AngularFireLiteDatabase {
 
   private readonly database: database.Database;
   private readonly config;
+  private readonly server = isPlatformServer(this.platformId);
+  private readonly browser = isPlatformBrowser(this.platformId);
+  private readonly ref = (ref) => this.database.ref(ref);
 
   constructor(private app: AngularFireLiteApp,
               private http: HttpClient,
@@ -29,214 +31,127 @@ export class AngularFireLiteDatabase {
 
   // ------------- Read -----------------//
 
-  read(ref: string): Subject<any> | Observable<any> {
+  read(ref: string): BehaviorSubject<any> | Observable<any> {
     const dataStateKey = makeStateKey<Object | Array<any>>(ref);
-    if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .map((payload) => {
-          if (!!payload && typeof payload === 'object') {
-            const result = Object.keys(payload).map((key) => {
-              return [ payload[ key ] ];
-            });
-            this.state.set(dataStateKey, result);
-            return result;
-          } else {
-            this.state.set(dataStateKey, payload);
-            return payload;
-          }
-        });
+    if (this.server) {
+      return this.SRH(ref, dataStateKey);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, []);
-      const VALUE = new BehaviorSubject<any>(SSRedValue);
-      this.database.ref(ref).on('value', (snapshot) => {
-        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
-          const result = Object.keys(snapshot.val()).map(function (key) {
-            return [ snapshot.val()[ key ] ];
-          });
-          VALUE.next(result);
-        } else {
-          VALUE.next(snapshot.val());
-        }
-      });
-      return VALUE;
+    if (this.browser) {
+      return this.BRH(ref, 'value', dataStateKey);
     }
   }
 
-  childAdded(ref: string): Subject<any> | Observable<any> {
+  childAdded(ref: string): BehaviorSubject<any> | Observable<any> {
     const dataStateKey = makeStateKey<Object>(ref);
-    if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .map((payload) => {
-          if (!!payload && typeof payload === 'object') {
-            const result = Object.keys(payload).map((key) => {
-              return [ payload[ key ] ];
-            });
-            this.state.set(dataStateKey, result);
-            return result;
-          } else {
-            this.state.set(dataStateKey, payload);
-            return payload;
-          }
-        });
+    if (this.server) {
+      return this.SRH(ref, dataStateKey);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, []);
-      const CHILD_ADDED = new BehaviorSubject<any>(SSRedValue);
-      this.database.ref(ref).on('child_added', (snapshot) => {
-        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
-          const result = Object.keys(snapshot.val()).map(function (key) {
-            return [ snapshot.val()[ key ] ];
-          });
-          CHILD_ADDED.next(result);
-        } else {
-          CHILD_ADDED.next(snapshot.val());
-        }
-      });
-      return CHILD_ADDED;
+    if (this.browser) {
+      return this.BRH(ref, 'child_added', dataStateKey);
     }
   }
 
-  childChanged(ref: string): Subject<any> | Observable<any> {
+  childChanged(ref: string): BehaviorSubject<any> | Observable<any> {
     const dataStateKey = makeStateKey<Object>(ref);
-    if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .map((payload) => {
-          if (!!payload && typeof payload === 'object') {
-            const result = Object.keys(payload).map((key) => {
-              return [ payload[ key ] ];
-            });
-            this.state.set(dataStateKey, result);
-            return result;
-          } else {
-            this.state.set(dataStateKey, payload);
-            return payload;
-          }
-        });
+    if (this.server) {
+      return this.SRH(ref, dataStateKey);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, []);
-      const CHILD_CHANGED = new BehaviorSubject<any>(SSRedValue);
-      this.database.ref(ref).on('child_changed', (snapshot) => {
-        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
-          const result = Object.keys(snapshot.val()).map(function (key) {
-            return [ snapshot.val()[ key ] ];
-          });
-          CHILD_CHANGED.next(result);
-        } else {
-          CHILD_CHANGED.next(snapshot.val());
-        }
-      });
-      return CHILD_CHANGED;
+    if (this.browser) {
+      return this.BRH(ref, 'child_changed', dataStateKey);
     }
   }
 
-  childRemoved(ref: string): Subject<any> | Observable<any> {
+  childRemoved(ref: string): BehaviorSubject<any> | Observable<any> {
     const dataStateKey = makeStateKey<Object>(ref);
-    if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .map((payload) => {
-          if (!!payload && typeof payload === 'object') {
-            const result = Object.keys(payload).map((key) => {
-              return [ payload[ key ] ];
-            });
-            this.state.set(dataStateKey, result);
-            return result;
-          } else {
-            this.state.set(dataStateKey, payload);
-            return payload;
-          }
-        });
+    if (this.server) {
+      return this.SRH(ref, dataStateKey);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, []);
-      const CHILD_REMOVED = new BehaviorSubject<any>(SSRedValue);
-      this.database.ref(ref).on('child_removed', (snapshot) => {
-        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
-          const result = Object.keys(snapshot.val()).map(function (key) {
-            return [ snapshot.val()[ key ] ];
-          });
-          CHILD_REMOVED.next(result);
-        } else {
-          CHILD_REMOVED.next(snapshot.val());
-        }
-      });
-      return CHILD_REMOVED;
+    if (this.browser) {
+      return this.BRH(ref, 'child_removed', dataStateKey);
     }
   }
 
-  childMoved(ref: string): Subject<any> | Observable<any> {
+  childMoved(ref: string): BehaviorSubject<any> | Observable<any> {
     const dataStateKey = makeStateKey<Object>(ref);
-    if (isPlatformServer(this.platformId)) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-        .map((payload) => {
-          if (!!payload && typeof payload === 'object') {
-            const result = Object.keys(payload).map((key) => {
-              return [ payload[ key ] ];
-            });
-            this.state.set(dataStateKey, result);
-            return result;
-          } else {
-            this.state.set(dataStateKey, payload);
-            return payload;
-          }
-        });
+    if (this.server) {
+      return this.SRH(ref, dataStateKey);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, []);
-      const CHILD_MOVED = new BehaviorSubject<any>(SSRedValue);
-      this.database.ref(ref).once('child_moved', (snapshot) => {
-        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
-          const result = Object.keys(snapshot.val()).map(function (key) {
-            return [ snapshot.val()[ key ] ];
-          });
-          CHILD_MOVED.next(result);
-        } else {
-          CHILD_MOVED.next(snapshot.val());
-        }
-      });
-      return CHILD_MOVED;
+    if (this.browser) {
+      return this.BRH(ref, 'child_moved', dataStateKey);
     }
   }
 
+  private SRH(ref, DSK) {
+    return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+      .map((payload) => {
+        if (!!payload && typeof payload === 'object') {
+          const result = Object.keys(payload).map((key) => {
+            return [payload[key]];
+          });
+          this.state.set(DSK, result);
+          return result;
+        } else {
+          this.state.set(DSK, payload);
+          return payload;
+        }
+      });
+  }
+
+  private BRH(ref, event, DSK) {
+    if (this.browser) {
+      const SSRedValue = this.state.get(DSK, []);
+      const DATA = new BehaviorSubject<any>(SSRedValue);
+      this.ref(ref).on(event, (snapshot) => {
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [snapshot.val()[key]];
+          });
+          DATA.next(result);
+        } else {
+          DATA.next(snapshot.val());
+        }
+      });
+      return DATA;
+    }
+  }
 
   // ------------- Write -----------------//
 
   write(ref: string, data: Object): Observable<any> {
-    if (isPlatformServer(this.platformId)) {
+    if (this.server) {
       return this.http.put(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.database.ref(ref).set(data));
+    if (this.browser) {
+      return fromPromise(this.ref(ref).set(data));
     }
   }
 
   push(ref: string, data: any): Observable<any> {
-    if (isPlatformServer(this.platformId)) {
+    if (this.server) {
       return this.http.post(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.database.ref(ref).push(data));
+    if (this.browser) {
+      return fromPromise(this.ref(ref).push(data));
     }
   }
 
   update(ref: string, data: any): Observable<any> {
-    if (isPlatformServer(this.platformId)) {
+    if (this.server) {
       return this.http.patch(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.database.ref(ref).update(data));
+    if (this.browser) {
+      return fromPromise(this.ref(ref).update(data));
     }
   }
 
   // ------------- Delete -----------------//
 
   remove(ref: string): Observable<any> {
-    if (isPlatformServer(this.platformId)) {
+    if (this.server) {
       return this.http.delete(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
-    if (isPlatformBrowser(this.platformId)) {
-      return fromPromise(this.database.ref(ref).remove());
+    if (this.browser) {
+      return fromPromise(this.ref(ref).remove());
     }
   }
 
@@ -244,104 +159,158 @@ export class AngularFireLiteDatabase {
   // ------------- Query -----------------//
 
 
-  query(ref: string): IQuery {
+  query(ref: string) {
+    const PID = this.platformId;
+    const state = this.state;
+    const db = this.database;
 
-    const HTTP = this.http;
-    const CONFIG = this.config;
+    const SQH = function (REF, FSQ, DSK) {
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${REF}.json?${FSQ}`)
+        .map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [payload[key]];
+            });
+            this.state.set(DSK, result);
+            return result;
+          } else {
+            this.state.set(DSK, payload);
+            return payload;
+          }
+        });
+    };
 
-    return {
-      RESTQuery: '',
-
-      orderByChild(query: string): IQuery {
-        this.RESTQuery += `&orderBy="${query}"`;
-        return this;
-      },
-
-      orderByKey(): IQuery {
-        this.RESTQuery += `&orderBy="$key"`;
-        return this;
-      },
-
-
-      orderByPriority(): IQuery {
-        this.RESTQuery += `&orderBy="$priority"`;
-        return this;
-      },
-
-      orderByValue(): IQuery {
-        this.RESTQuery += `&orderBy="$value"`;
-        return this;
-      },
-
-      startAt(query: number | string | boolean | null): IQuery {
-        this.RESTQuery += `&startAt=${query}`;
-        return this;
-      },
-
-      endAt(query: number | string | boolean | null): IQuery {
-        this.RESTQuery += `&endAt=${query}`;
-        return this;
-      },
-
-      equalTo(query: number | string | boolean | null): IQuery {
-        this.RESTQuery += `&equalTo=${query}`;
-        return this;
-      },
-
-      limitToFirst(limit: number): IQuery {
-        this.RESTQuery += `&limitToFirst=${limit}`;
-        return this;
-      },
-
-      limitToLast(limit: number): IQuery {
-        this.RESTQuery += `&limitToLast=${limit}`;
-        return this;
-      },
-
-      run(): Observable<any> {
-        return HTTP.get(`https://${CONFIG.projectId}.firebaseio.com/${ref}.json?${this.RESTQuery}`);
+    const BQH = function (BS) {
+      return (snapshot) => {
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [snapshot.val()[key]];
+          });
+          BS.next(result);
+        } else {
+          BS.next(snapshot.val());
+        }
       }
     };
-  };
 
-}
+    let SQ = '';
+    let BQ = this.ref(ref) as any;
+    return {
 
-// ------ Utils  -------
+      startAt(value: number | string | boolean | null): RDQuery {
+        SQ += `&startAt=${value}`;
+        BQ = BQ.startAt(value);
+        return this;
+      },
 
-export interface IQuery {
+      endAt(value: number | string | boolean | null): RDQuery {
+        SQ += `&endAt=${value}`;
+        BQ = BQ.endAt(value);
+        return this;
+      },
 
-  RESTQuery: string;
+      equalTo(value: number | string | boolean | null): RDQuery {
+        SQ += `&equalTo=${value}`;
+        BQ = BQ.equalTo(value);
+        return this;
+      },
 
-  run(): Observable<any>;
+      isEqual(query: RDQuery | any): boolean {
+        if (isPlatformBrowser(PID)) {
+          return db.ref(ref).isEqual(query)
+        }
+      },
 
-  orderByChild(query: string): IQuery;
+      limitToFirst(limit: number): RDQuery {
+        SQ += `&limitToFirst=${limit}`;
+        BQ = BQ.limitToFirst(limit);
+        return this;
+      },
 
-  orderByKey(): IQuery;
+      limitToLast(limit: number): RDQuery {
+        SQ += `&limitToLast=${limit}`;
+        BQ = BQ.limitToLast(limit);
+        return this;
+      },
 
-  orderByPriority(): IQuery;
+      orderByChild(path: string): RDQuery {
+        SQ += `&orderBy="${path}"`;
+        BQ = BQ.orderByChild(path);
+        return this;
+      },
 
-  orderByValue(): IQuery;
+      orderByKey(): RDQuery {
+        SQ += `&orderBy="$key"`;
+        BQ = BQ.orderByKey();
+        return this;
+      },
 
-  startAt(query: number | string | boolean | null): IQuery;
+      orderByPriority(): RDQuery {
+        SQ += `&orderBy="$priority"`;
+        BQ = BQ.orderByPriority();
+        return this;
+      },
 
-  endAt(query: number | string | boolean | null): IQuery;
+      orderByValue(): RDQuery {
+        SQ += `&orderBy="$value"`;
+        BQ = BQ.orderByValue();
+        return this;
+      },
 
-  equalTo(query: number | string | boolean | null): IQuery;
+      on(event: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | BehaviorSubject<any> {
+        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        if (isPlatformServer(PID)) {
+          SQH(ref, SQ, dataStateKey);
+        }
+        if (isPlatformBrowser(PID)) {
+          const SSRedValue = state.get(dataStateKey, []);
+          const VALUE = new BehaviorSubject<any>(SSRedValue);
+          BQ.on(event, BQH(VALUE));
+          return VALUE;
+        }
+      },
 
-  limitToFirst(limit: number): IQuery;
+      once(event: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | BehaviorSubject<any> {
+        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        if (isPlatformServer(PID)) {
+          SQH(ref, SQ, dataStateKey);
+        }
+        if (isPlatformBrowser(PID)) {
+          const SSRedValue = state.get(dataStateKey, []);
+          const VALUE = new BehaviorSubject<any>(SSRedValue);
+          BQ.once(event, BQH(VALUE));
+          return VALUE;
+        }
+      }
 
-  limitToLast(limit: number): IQuery;
-
-}
-
-
-export function generateId() : string {
-  let id = '';
-  const possibleIds = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < 5; i++) {
-    id += possibleIds.charAt(Math.floor(Math.random() * possibleIds.length));
+    }
   }
+}
 
-  return id;
+// ------ Def  -------
+
+export interface RDQuery {
+  startAt(value: number | string | boolean | null): RDQuery;
+
+  endAt(value: number | string | boolean | null): RDQuery;
+
+  equalTo(value: number | string | boolean | null): RDQuery;
+
+  isEqual(other: RDQuery | null): boolean;
+
+  limitToFirst(limit: number): RDQuery;
+
+  limitToLast(limit: number): RDQuery;
+
+  orderByChild(path: string): RDQuery;
+
+  orderByKey(): RDQuery;
+
+  orderByPriority(): RDQuery;
+
+  orderByValue(): RDQuery;
+
+  on(eventType: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | any;
+
+  once(eventType: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | any;
 }

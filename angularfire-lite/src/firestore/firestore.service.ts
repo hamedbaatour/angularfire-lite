@@ -1,17 +1,18 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { AngularFireLiteApp } from '../core.service';
-import { HttpClient } from '@angular/common/http';
-import { FirebaseAppConfig } from '../core.module';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Observable } from 'rxjs/Observable';
-import { TransferState, makeStateKey } from '@angular/platform-browser';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {AngularFireLiteApp} from '../core.service';
+import {HttpClient} from '@angular/common/http';
+import {FirebaseAppConfig} from '../core.module';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {fromPromise} from 'rxjs/observable/fromPromise';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {TransferState, makeStateKey} from '@angular/platform-browser';
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 
-import { firestore } from 'firebase/app';
+import {firestore} from 'firebase/app';
 import 'firebase/firestore';
 
 
@@ -20,6 +21,7 @@ export class AngularFireLiteFirestore {
 
   private readonly firestore: firestore.Firestore;
   private readonly config: FirebaseAppConfig;
+  private readonly browser = isPlatformBrowser(this.platformId);
 
   constructor(private app: AngularFireLiteApp,
               private http: HttpClient,
@@ -32,194 +34,96 @@ export class AngularFireLiteFirestore {
 
   // ------------- Read -----------------//
 
-  // TODO: Support Transactions and Batched Writes
-
   read(ref: string): Observable<any> | BehaviorSubject<any> {
-    const dataStateKey = makeStateKey<Object>('firestore');
+    const dataStateKey = makeStateKey<Object>(ref);
+
+    const refArray = ref.split('/');
+    if (refArray[0] === '/') {
+      refArray.shift();
+    }
+    if (refArray[refArray.length - 1] === '/') {
+      refArray.pop();
+    }
+    const slashes = refArray.length - 1;
+
     if (isPlatformServer(this.platformId)) {
-      const data = {};
+
       return this.http
         .get(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${ref}`)
         .map((res: any) => {
-          Object.keys(res.fields)
-            .forEach((key) => {
-              // noinspection TsLint
-              for (const keyValue in res.fields[ key ]) {
-                data[ key ] = res.fields[ key ][ keyValue ];
-              }
+          const docData = {};
+          if (slashes % 2 !== 0) {
+            Object.keys(res.fields)
+              .forEach((key) => {
+                for (const keyValue in res.fields[key]) {
+                  if (keyValue) {
+                    docData[key] = res.fields[key][keyValue];
+                  }
+                }
+              });
+            return docData;
+          } else {
+            const colData = [];
+            res.documents.forEach((doc) => {
+              const singleDocData = {};
+              Object.keys(doc.fields)
+                .forEach((key) => {
+                  for (const keyValue in doc.fields[key]) {
+                    if (keyValue) {
+                      singleDocData[key] = doc.fields[key][keyValue];
+                    }
+                  }
+                });
+              colData.push(singleDocData);
             });
-          return data;
+            return colData;
+          }
         })
         .do((payload) => {
           this.state.set(dataStateKey, payload);
         });
     }
-    if (isPlatformBrowser(this.platformId)) {
-      const SSRedValue = this.state.get(dataStateKey, 'loading...');
+    if (this.browser) {
+      const data = [];
+      const SSRedValue = this.state.get(dataStateKey, []);
       const DATA = new BehaviorSubject<any>(SSRedValue);
-      this.firestore.doc(ref).onSnapshot((snapshot) => {
-        DATA.next(snapshot.data());
-      });
+
+
+      if (slashes % 2 === 0) {
+        this.firestore.collection(ref).onSnapshot((snapshot) => {
+          snapshot.docs.forEach((doc) => {
+            data.push(doc.data());
+          });
+          DATA.next(data);
+        });
+      } else {
+        this.firestore.doc(ref).onSnapshot((snapshot) => {
+          DATA.next(snapshot.data());
+        });
+      }
       return DATA;
     }
   }
+
 
   // ------------- Write -----------------//
 
 
   write(ref: string, data: Object, merge?: boolean): Observable<any> {
-    // if (isPlatformServer(this.platformId)) {
-    //   const serverData = {};
-    //   let valueType;
-    //   // noinspection TsLint
-    //   for (const key in data) {
-    //     switch (typeof data[ key ]) {
-    //       case 'string': {
-    //         valueType = 'stringValue';
-    //         break;
-    //       }
-    //       case 'number': {
-    //         valueType = 'doubleValue';
-    //         break;
-    //       }
-    //       case 'boolean': {
-    //         valueType = 'booleanValue';
-    //         break;
-    //       }
-    //       case 'undefined': {
-    //         valueType = 'nullValue';
-    //         break;
-    //       }
-    //       case 'object': {
-    //         if (data[ key ]) {
-    //           valueType = 'mapValue';
-    //         } else {
-    //           valueType = 'nullValue';
-    //         }
-    //         break;
-    //       }
-    //       case 'function': {
-    //         valueType = 'nullValue';
-    //         break;
-    //       }
-    //     }
-    //     serverData[ key ] = {
-    //       valueType: data[ key ]
-    //     };
-    //   }
-    //   return this.http
-    //     .post(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${ref}`,
-    //       {
-    //         'fields': serverData
-    //       }
-    //     );
-    // }
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browser) {
       return fromPromise(this.firestore.doc(ref).set(data, {merge: merge}));
     }
   }
 
 
   push(ref: string, data: Object): Observable<any> {
-    // if (isPlatformServer(this.platformId)) {
-    //   const serverData = {};
-    //   let valueType;
-    //   // noinspection TsLint
-    //   for (const key in data) {
-    //     switch (typeof data[ key ]) {
-    //       case 'string': {
-    //         valueType = 'stringValue';
-    //         break;
-    //       }
-    //       case 'number': {
-    //         valueType = 'doubleValue';
-    //         break;
-    //       }
-    //       case 'boolean': {
-    //         valueType = 'booleanValue';
-    //         break;
-    //       }
-    //       case 'undefined': {
-    //         valueType = 'nullValue';
-    //         break;
-    //       }
-    //       case 'object': {
-    //         if (data[ key ]) {
-    //           valueType = 'arrayValue';
-    //         } else {
-    //           valueType = 'nullValue';
-    //         }
-    //         break;
-    //       }
-    //       case 'function': {
-    //         valueType = 'nullValue';
-    //         break;
-    //       }
-    //     }
-    //     serverData[ key ] = {
-    //       valueType: data[ key ]
-    //     };
-    //   }
-    //   return this.http
-    //     .post(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${ref}`,
-    //     {
-    //       'fields': serverData
-    //     }
-    //   );
-    // }
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browser) {
       return fromPromise(this.firestore.collection(ref).add(data));
     }
   }
 
   update(ref: string, data: Object): Observable<any> {
-    // if (isPlatformServer(this.platformId)) {
-    //   const serverData = {};
-    //   let valueType;
-    //   // noinspection TsLint
-    //   for (const key in data) {
-    //     switch (typeof data[ key ]) {
-    //       case 'string': {
-    //         valueType = 'stringValue';
-    //         break;
-    //       }
-    //       case 'number': {
-    //         valueType = 'doubleValue';
-    //         break;
-    //       }
-    //       case 'boolean': {
-    //         valueType = 'booleanValue';
-    //         break;
-    //       }
-    //       case 'undefined': {
-    //         valueType = 'nullValue';
-    //         break;
-    //       }
-    //       case 'object': {
-    //         if (data[ key ]) {
-    //           valueType = 'arrayValue';
-    //         } else {
-    //           valueType = 'nullValue';
-    //         }
-    //         break;
-    //       }
-    //       case 'function': {
-    //         valueType = 'nullValue';
-    //         break;
-    //       }
-    //     }
-    //     serverData[ key ] = {
-    //       valueType: data[ key ]
-    //     };
-    //   }
-    //   return this.http
-    //     .patch(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${ref}`,
-    //     {
-    //       'fields': serverData
-    //     }
-    //   );
-    // }
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browser) {
       return fromPromise(this.firestore.doc(ref).update(data));
     }
   }
@@ -231,22 +135,22 @@ export class AngularFireLiteFirestore {
       return this.http
         .delete(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${DocumentRef}`);
     }
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browser) {
       return fromPromise(this.firestore.doc(DocumentRef).delete());
     }
   }
 
   removeField(ref: string, fieldToDelete: string): Observable<any> {
     const update = {};
-    update[ fieldToDelete ] = firestore.FieldValue.delete();
-    if (isPlatformBrowser(this.platformId)) {
+    update[fieldToDelete] = firestore.FieldValue.delete();
+    if (this.browser) {
       return fromPromise(this.firestore.doc(ref).update(update));
     }
 
   }
 
   removeCollection(collectionRef: string): Observable<any> {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browser) {
       return fromPromise(this.firestore.collection(collectionRef).get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           this.firestore.batch().delete(doc.ref);
@@ -257,82 +161,337 @@ export class AngularFireLiteFirestore {
 
   // ------------- Query -----------------//
 
+  query(ref: string) {
+    const PID = this.platformId;
+    const HTTP = this.http;
+    const CONFIG = this.config;
+    const state = this.state;
+    const fs = this.firestore;
+    const SSQ: any = {
+      'from': [{'collectionId': `${ref}`}]
+    };
 
-  // query(ref: string): IQuery {
-  //
-  //   const HTTP = this.http;
-  //   const CONFIG = this.config;
-  //
-  //   return {
-  //     RESTQuery: '',
-  //
-  //     orderByChild(query: string): IQuery {
-  //       this.RESTQuery += `&orderBy="${query}"`;
-  //       return this;
-  //     },
-  //
-  //     orderByKey(): IQuery {
-  //       this.RESTQuery += `&orderBy="$key"`;
-  //       return this;
-  //     },
-  //
-  //
-  //     orderByPriority(): IQuery {
-  //       this.RESTQuery += `&orderBy="$priority"`;
-  //       return this;
-  //     },
-  //
-  //     orderByValue(): IQuery {
-  //       this.RESTQuery += `&orderBy="$value"`;
-  //       return this;
-  //     },
-  //
-  //     startAt(query: number | string | boolean | null): IQuery {
-  //       this.RESTQuery += `&startAt=${query}`;
-  //       return this;
-  //     },
-  //
-  //     endAt(query: number | string | boolean | null): IQuery {
-  //       this.RESTQuery += `&endAt=${query}`;
-  //       return this;
-  //     },
-  //
-  //     equalTo(query: number | string | boolean | null): IQuery {
-  //       this.RESTQuery += `&equalTo=${query}`;
-  //       return this;
-  //     },
-  //
-  //     limitToFirst(limit: number): IQuery {
-  //       this.RESTQuery += `&limitToFirst=${limit}`;
-  //       return this;
-  //     },
-  //
-  //     limitToLast(limit: number): IQuery {
-  //       this.RESTQuery += `&limitToLast=${limit}`;
-  //       return this;
-  //     },
-  //
-  //     run(): Observable<any> {
-  //       const dataStateKey = makeStateKey<Object>('firestore');
-  //       const data = {};
-  //       return this.http
-  //         .get(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${ref}`)
-  //         .map((res: any) => res.document)
-  //         .map((res: any) => {
-  //           Object.keys(res.fields)
-  //             .forEach((key) => {
-  //               // noinspection TsLint
-  //               for (const keyValue in res.fields[ key ]) {
-  //                 data[ key ] = res.fields[ key ][ keyValue ];
-  //               }
-  //             });
-  //           return data;
-  //         })
-  //         .do((payload) => {
-  //           this.state.set(dataStateKey, payload);
-  //         });
-  //     }
-  //   };
-  // };
+    const SQ = {
+      'structuredQuery': SSQ
+    };
+    const SQOB = [];
+    let BQ = fs.collection(ref) as any;
 
+    return {
+
+      where(document: string, comparison: string, value: string): Query {
+        let SOP = '';
+        switch (comparison) {
+          case '<':
+            SOP = 'LESS_THAN';
+            break;
+          case '<=':
+            SOP = 'LESS_THAN_OR_EQUAL';
+            break;
+          case '>':
+            SOP = 'GREATER_THAN';
+            break;
+          case '>=':
+            SOP = 'GREATER_THAN_OR_EQUAL';
+            break;
+          case '==':
+            SOP = 'EQUAL';
+            break;
+        }
+        SSQ.where = {};
+        SSQ.where.fieldFilter = {};
+        SSQ.where.fieldFilter.field = {};
+
+        SSQ.where.fieldFilter.field.fieldPath = ref;
+        SSQ.where.fieldFilter.op = SOP;
+        SSQ.where.fieldFilter.value = FormatServerData(value);
+        BQ = BQ.where(document, comparison, value);
+        return this;
+      },
+
+      startAt(...startValue): Query {
+        const SV = [];
+        startValue.forEach((value) => {
+          SV.push(FormatServerData(value));
+        });
+
+        SSQ.startAt = {};
+
+        SSQ.startAt.before = true;
+        SSQ.startAt.values = SV;
+        BQ = BQ.startAt(...startValue);
+        return this;
+      },
+
+      startAfter(...startValue): Query {
+        const SV = [];
+        startValue.forEach((value) => {
+          SV.push(FormatServerData(value));
+        });
+
+        SSQ.startAt = {};
+
+        SSQ.startAt.before = false;
+        SSQ.startAt.values = SV;
+        BQ = BQ.startAfter(...startValue);
+        return this;
+      },
+
+      endAt(...endValue): Query {
+        const SV = [];
+        endValue.forEach((value) => {
+          SV.push(FormatServerData(value));
+        });
+
+        SSQ.endAt = {};
+
+        SSQ.endAt.before = false;
+        SSQ.endAt.values = SV;
+        BQ = BQ.endAt(...endValue);
+        return this;
+      },
+
+      endBefore(...endValue): Query {
+        const SV = [];
+        endValue.forEach((value) => {
+          SV.push(FormatServerData(value));
+        });
+
+        SSQ.endAt = {};
+
+        SSQ.endAt.before = true;
+        SSQ.endAt.values = SV;
+        BQ = BQ.endBefore(...endValue);
+        return this;
+      },
+
+      limit(limit: number): Query {
+        SSQ.limit = limit;
+        BQ = BQ.limit(limit);
+        return this;
+      },
+
+      orderBy(path: string, order?: 'asc' | 'desc'): Query {
+        const orderBy = {
+          field: {
+            fieldPath: ''
+          }
+        };
+        orderBy.field.fieldPath = path;
+        switch (order) {
+          case 'asc':
+            orderBy['direction'] = 'ASCENDING';
+            break;
+          case 'desc':
+            orderBy['direction'] = 'DESCENDING';
+            break;
+        }
+        SQOB.push(orderBy);
+        BQ = BQ.orderBy(path, order);
+        SSQ.orderBy = SQOB;
+        return this;
+      },
+
+      on(): BehaviorSubject<any> | Observable<any> {
+        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        if (isPlatformServer(PID)) {
+          const data = [];
+          return HTTP
+            .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents:runQuery`, SQ)
+            .map((res: any) => {
+              for (const doc of res) {
+                const documentData = {};
+                if (doc) {
+                  Object.keys(doc.document.fields).forEach((fname) => {
+                    const fieldType = Object.keys(doc.document.fields.fname);
+                    documentData[fname] = doc.document.fields.fname[fieldType[0]];
+                  });
+                  data.push(documentData);
+                }
+              }
+              return data;
+            })
+            .do((payload) => {
+              state.set(dataStateKey, payload);
+            });
+        }
+        if (isPlatformBrowser(PID)) {
+          const data = [];
+          const SSRedValue = state.get(dataStateKey, []);
+          const VALUE = new BehaviorSubject<any>(SSRedValue);
+          BQ.onSnapshot((snapshot) => {
+            snapshot.forEach((doc) => {
+              data.push(doc.data());
+            });
+            VALUE.next(data);
+          });
+          return VALUE;
+        }
+      },
+
+      get(): BehaviorSubject<any> | Observable<any> {
+        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        if (isPlatformServer(PID)) {
+          const data = [];
+          return HTTP
+            .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents`, SQ)
+            .map((res: any) => {
+              res.forEach((doc) => {
+                const documentData = {};
+                if (doc.document.fields) {
+                  Object.keys(doc.document.fields).forEach((fieldName) => {
+                    const fieldType = Object.keys(doc.document.fields.fieldName);
+                    documentData[fieldName] = doc.document.fields.fieldName[fieldType[0]];
+                  });
+                  data.push(documentData);
+                }
+              });
+              return data;
+            })
+            .do((payload) => {
+              state.set(dataStateKey, payload);
+            });
+        }
+        if (isPlatformBrowser(PID)) {
+          const data = [];
+          const SSRedValue = state.get(dataStateKey, []);
+          const VALUE = new BehaviorSubject<any>(SSRedValue);
+          BQ.get().then((snapshot) => {
+            snapshot.forEach((doc) => {
+              data.push(doc);
+            });
+            VALUE.next(data);
+          });
+          return VALUE;
+        }
+      }
+
+    }
+
+  }
+
+
+  // ------------- Transactions and Batched Writes -----------------//
+
+  transaction(): Transaction {
+    if (this.browser) {
+      const fs = this.firestore;
+      let transactionToRun: Promise<any>;
+      let readCount = 0;
+      const transactions = {
+        get(ref) {
+          return fs.doc(ref).get()
+        },
+        set(ref, data) {
+          return fs.doc(ref).set(data)
+        }
+      };
+      return {
+        set(ref: string, data: Object): Transaction {
+          transactionToRun = transactionToRun.then(() => {
+            transactions.set(ref, data);
+          });
+          return this;
+        },
+        get(ref: string): Subject<any> {
+          const getSubject = new Subject();
+          if (readCount > 0) {
+            transactionToRun = transactionToRun.then(() => {
+              transactions.get(ref).then((value) => {
+                getSubject.next({data: value.data(), next: this});
+              });
+            });
+          } else if (readCount === 0) {
+            transactionToRun = transactions.get(ref).then((value) => {
+              getSubject.next({data: value.data(), next: this});
+            });
+          }
+          readCount++;
+          return getSubject;
+        },
+        run(): Observable<any> {
+          return fromPromise(fs.runTransaction(() => {
+            return transactionToRun
+          }))
+        }
+      }
+    }
+  }
+
+  batch(): Batch {
+    if (this.browser) {
+      const fs = this.firestore;
+      const b = this.firestore.batch();
+      return {
+        set(ref: string, data: Object): Batch {
+          b.set(fs.doc(ref), data);
+          return this;
+        },
+        update(ref: string, data: Object): Batch {
+          b.update(fs.doc(ref), data);
+          return this;
+        },
+        delete(ref: string): Batch {
+          b.delete(fs.doc(ref));
+          return this;
+        },
+        commit(): Observable<any> {
+          return fromPromise(b.commit())
+        }
+      }
+    }
+  }
+
+
+}
+
+export function FormatServerData(value) {
+  switch (value) {
+    case (typeof value === 'boolean'):
+      return {'booleanValue': value};
+    case (typeof value === 'string'):
+      return {'stringValue': value};
+    case (typeof value === 'number'):
+      return {'doubleValue': value};
+    case (typeof value === 'object') && (value):
+      return {'arrayValue': value};
+  }
+}
+
+export interface Batch {
+  set(ref: string, data: Object): Batch;
+
+  update(ref: string, data: Object): Batch;
+
+  delete(ref: string): Batch;
+
+  commit(): Observable<any>
+}
+
+export interface Transaction {
+  set(ref: string, data: Object): Transaction;
+
+  get(ref: string): Subject<any>;
+
+  run(): Observable<any>
+}
+
+export interface Query {
+  where(document: string, comparison: string, value: string): Query;
+
+  startAt(...startValue: Array<string>): Query;
+
+  endAt(...endValue: Array<string>): Query;
+
+  startAfter(...startValue: Array<string>): Query;
+
+  endBefore(...endValue: Array<string>): Query;
+
+  limit(limit: number): Query;
+
+  orderBy(path: string, order?: 'asc' | 'desc'): Query;
+
+  on(): BehaviorSubject<any> | Observable<any>;
+
+  get(): BehaviorSubject<any> | Observable<any>;
 }
