@@ -23,7 +23,7 @@
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
 | Transactions and Batched Writes | :heavy_check_mark: <br> Observable Based    |  :x:  |
-| Size                  |   **75 KB** :zap:   | 	 **115 KB** :turtle: |
+| Size                  |   **60 KB** :zap:   | 	 **115 KB** :turtle: |
 
 [![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/91e29b8e406bb37404ab943519c374f1247957ec/SSR.svg)](#)
 ### Finally SSR with Firebase!
