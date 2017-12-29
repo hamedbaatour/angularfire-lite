@@ -17,14 +17,15 @@
 | Features              | AngularFire Lite         | AngularFire2  |
 | -------------         |:-------------:|         :-------------------:  |
 | Authentication        | :heavy_check_mark:    | :heavy_check_mark:     |
-| Firestore             | :heavy_check_mark:    |  :heavy_check_mark:   |
+| Firestore             | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Storage               | :heavy_check_mark:    |  :x:                   |
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
-| Size                   | N/A                  | N/A                    |
+| Transactions and Batched Writes | :heavy_check_mark: <br> Observable Based    |  :x:  |
+| Size                  |   **75 KB** :zap:   | 	 **115 KB** :turtle: |
 
-[![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/3e300f5043822fb52470ee947ed8adab0c17034d/SSR.svg)](#)
+[![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/91e29b8e406bb37404ab943519c374f1247957ec/SSR.svg)](#)
 ### Finally SSR with Firebase!
 ___
 
@@ -144,7 +145,7 @@ ___
 
 - **Will be there any breaking changes to AngularFire Lite?**
 
-AngularFire Lite is still in beta so some major changes could happen however we will try to avoid that as much as possible and keep the API consistent across all the firebase services provided.
+AngularFire Lite is still in beta so some changes may happen however we will try to avoid that as much as possible and keep the API consistent across all the firebase services provided.
 
 
 ### Contributors:
