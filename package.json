@@ -1,7 +1,8 @@
 {
-  "name": "angularfire-packagr",
-  "version": "1.0.0",
+  "name": "angularfire-lite",
+  "version": "5.1.1-beta",
   "license": "Apache-2.0",
+  "description": "Lightweight library to use Firebase API with Angular.",
   "author": "Hamed Baatour",
   "repository": {
     "type": "git",
@@ -11,21 +12,20 @@
     "build": "ng-packagr"
   },
   "private": false,
-  "dependencies": {
-    "@angular/common": "^5.0.0",
+  "devDependencies": {
     "@angular/compiler": "^5.0.0",
+    "@angular/compiler-cli": "^5.0.0",
+    "@angular/common": "^5.0.0",
     "@angular/core": "^5.0.0",
     "@angular/http": "^5.0.0",
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-server": "^5.0.0",
     "firebase": "^4.6.2",
     "rxjs": "^5.5.0",
-    "zone.js": "^0.8.18"
-  },
-  "devDependencies": {
-    "@angular/compiler-cli": "^5.0.0",
-    "ng-packagr": "^2.0.0-rc.7",
-    "typescript": "~2.5.0",
-    "tslint": "^5.8.0"
+    "zone.js": "^0.8.18",
+    "ng-packagr": "^2.0.0-rc.9",
+    "typescript": "~2.4.2",
+    "tslint": "^5.8.0",
+    "tsickle": "^0.25.5"
   }
 }

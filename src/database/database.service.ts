@@ -1,15 +1,15 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {AngularFireLiteApp} from '../core.service';
-import {HttpClient} from '@angular/common/http';
-import {fromPromise} from 'rxjs/observable/fromPromise';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {makeStateKey, TransferState} from '@angular/platform-browser';
-import {isPlatformBrowser, isPlatformServer} from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { AngularFireLiteApp } from '../core.service';
+import { HttpClient } from '@angular/common/http';
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { makeStateKey, TransferState } from '@angular/platform-browser';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 import 'rxjs/add/operator/map';
 
-import {database} from 'firebase/app';
+import { database } from 'firebase/app';
 
 
 @Injectable()
@@ -215,7 +215,7 @@ export class AngularFireLiteDatabase {
         return this;
       },
 
-      isEqual(query: RDQuery | any): boolean {
+      isEqual(query: null | any): boolean {
         if (isPlatformBrowser(PID)) {
           return db.ref(ref).isEqual(query)
         }

@@ -41,7 +41,7 @@ export class AngularFireLite {
         {
           provide: AngularFireLiteApp,
           useFactory: AngularFireLiteAppFactory,
-          deps: [ FirebaseAppConfig ]
+          deps: [FirebaseAppConfig]
         },
         AngularFireLiteDatabase,
         AngularFireLiteAuth,

@@ -1,11 +1,11 @@
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
-import {AngularFireLiteApp} from '../core.service';
-import {fromPromise} from 'rxjs/observable/fromPromise';
-import {isPlatformBrowser} from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { AngularFireLiteApp } from '../core.service';
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import { isPlatformBrowser } from '@angular/common';
 
-import {storage} from 'firebase/app';
+import { storage } from 'firebase/app';
 import 'firebase/storage';
 
 
