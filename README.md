@@ -56,7 +56,7 @@ Angularfire Lite is the very first angular library to support server side render
 
 ```bash
  
-npm install --save angularfire-lite firebase
+npm install --save angularfire-lite firebase@4.8.0
  
 ```
 <br>
