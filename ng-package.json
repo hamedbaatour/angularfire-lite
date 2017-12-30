@@ -1,18 +1,8 @@
 {
   "$schema": "./node_modules/ng-packagr/ng-package.schema.json",
-  "src": "./src",
   "dest": "./dist",
   "workingDirectory": ".ng_build",
   "lib": {
-    "entryFile": "./src/public_api.ts",
-    "externals": {
-      "firebase": "firebase",
-      "firebase/app": "firebase/app",
-      "firebase/auth": "firebase/auth",
-      "firebase/database": "firebase/database",
-      "firebase/firestore": "firebase/firestore",
-      "firebase/storage": "firebase/storage",
-      "firebase/messaging": "firebase/messaging"
-    }
+    "entryFile": "./src/public_api.ts"
   }
 }

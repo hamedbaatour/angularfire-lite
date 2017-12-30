@@ -140,11 +140,9 @@ export class AngularFireLiteFirestore {
     }
   }
 
-  removeField(ref: string, fieldToDelete: string): Observable<any> {
-    const update = {};
-    update[fieldToDelete] = firestore.FieldValue.delete();
+  removeField(ref: string, ...fields): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.firestore.doc(ref).update(update));
+      return fromPromise(this.firestore.doc(ref).update(fields));
     }
 
   }
@@ -198,13 +196,13 @@ export class AngularFireLiteFirestore {
             SOP = 'EQUAL';
             break;
         }
-        SSQ.where = {};
-        SSQ.where.fieldFilter = {};
-        SSQ.where.fieldFilter.field = {};
+        SSQ['where'] = {};
+        SSQ['where'].fieldFilter = {};
+        SSQ['where'].fieldFilter.field = {};
 
-        SSQ.where.fieldFilter.field.fieldPath = ref;
-        SSQ.where.fieldFilter.op = SOP;
-        SSQ.where.fieldFilter.value = FormatServerData(value);
+        SSQ['where'].fieldFilter.field.fieldPath = ref;
+        SSQ['where'].fieldFilter.op = SOP;
+        SSQ['where'].fieldFilter.value = FormatServerData(value);
         BQ = BQ.where(document, comparison, value);
         return this;
       },
@@ -288,7 +286,7 @@ export class AngularFireLiteFirestore {
         }
         SQOB.push(orderBy);
         BQ = BQ.orderBy(path, order);
-        SSQ.orderBy = SQOB;
+        SSQ.orderBy = SQOB as any;
         return this;
       },
 

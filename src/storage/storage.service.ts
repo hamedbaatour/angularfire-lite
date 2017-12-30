@@ -6,7 +6,6 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
 import { isPlatformBrowser } from '@angular/common';
 
 import { storage } from 'firebase/app';
-import 'firebase/storage';
 
 
 @Injectable()

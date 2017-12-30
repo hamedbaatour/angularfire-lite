@@ -163,18 +163,20 @@ export class AngularFireLiteDatabase {
     const PID = this.platformId;
     const state = this.state;
     const db = this.database;
+    const http = this.http;
+    const config = this.config;
 
     const SQH = function (REF, FSQ, DSK) {
-      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${REF}.json?${FSQ}`)
+      return http.get(`https://${config.projectId}.firebaseio.com/${REF}.json?${FSQ}`)
         .map((payload) => {
           if (!!payload && typeof payload === 'object') {
             const result = Object.keys(payload).map((key) => {
               return [payload[key]];
             });
-            this.state.set(DSK, result);
+            state.set(DSK, result);
             return result;
           } else {
-            this.state.set(DSK, payload);
+            state.set(DSK, payload);
             return payload;
           }
         });
@@ -260,7 +262,7 @@ export class AngularFireLiteDatabase {
       on(event: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | BehaviorSubject<any> {
         const dataStateKey = makeStateKey<Object | Array<any>>(ref);
         if (isPlatformServer(PID)) {
-          SQH(ref, SQ, dataStateKey);
+          return SQH(ref, SQ, dataStateKey);
         }
         if (isPlatformBrowser(PID)) {
           const SSRedValue = state.get(dataStateKey, []);
@@ -273,7 +275,7 @@ export class AngularFireLiteDatabase {
       once(event: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | BehaviorSubject<any> {
         const dataStateKey = makeStateKey<Object | Array<any>>(ref);
         if (isPlatformServer(PID)) {
-          SQH(ref, SQ, dataStateKey);
+          return SQH(ref, SQ, dataStateKey);
         }
         if (isPlatformBrowser(PID)) {
           const SSRedValue = state.get(dataStateKey, []);
