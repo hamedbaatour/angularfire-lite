@@ -79,8 +79,8 @@ export class AngularFireLiteFirestore {
             return colData;
           }
         })
-        .do((payload) => {
-          this.state.set(dataStateKey, payload);
+        .do((pl) => {
+          this.state.set(dataStateKey, pl);
         });
     }
     if (this.browser) {
@@ -167,6 +167,26 @@ export class AngularFireLiteFirestore {
     const fs = this.firestore;
     const SSQ: any = {
       'from': [{'collectionId': `${ref}`}]
+    };
+
+    const SQHFS = function (DSK) {
+      const data = [];
+      return HTTP
+        .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents:runQuery`, SQ)
+        .map((res: any) => {
+          for (const doc of res) {
+            const documentData = {};
+            Object.keys(doc.document.fields).forEach((fieldName) => {
+              const fieldType = Object.keys(doc.document.fields[fieldName]);
+              documentData[fieldName] = doc.document.fields[fieldName][fieldType[0]];
+            });
+            data.push(documentData);
+          }
+          return data;
+        })
+        .do((pl) => {
+          state.set(DSK, pl);
+        });
     };
 
     const SQ = {
@@ -291,31 +311,13 @@ export class AngularFireLiteFirestore {
       },
 
       on(): BehaviorSubject<any> | Observable<any> {
-        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        const ONDSK = makeStateKey<Object | Array<any>>(ref + ':query');
         if (isPlatformServer(PID)) {
-          const data = [];
-          return HTTP
-            .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents:runQuery`, SQ)
-            .map((res: any) => {
-              for (const doc of res) {
-                const documentData = {};
-                if (doc) {
-                  Object.keys(doc.document.fields).forEach((fname) => {
-                    const fieldType = Object.keys(doc.document.fields.fname);
-                    documentData[fname] = doc.document.fields.fname[fieldType[0]];
-                  });
-                  data.push(documentData);
-                }
-              }
-              return data;
-            })
-            .do((payload) => {
-              state.set(dataStateKey, payload);
-            });
+          return SQHFS(ONDSK);
         }
         if (isPlatformBrowser(PID)) {
           const data = [];
-          const SSRedValue = state.get(dataStateKey, []);
+          const SSRedValue = state.get(ONDSK, []);
           const VALUE = new BehaviorSubject<any>(SSRedValue);
           BQ.onSnapshot((snapshot) => {
             snapshot.forEach((doc) => {
@@ -328,31 +330,13 @@ export class AngularFireLiteFirestore {
       },
 
       get(): BehaviorSubject<any> | Observable<any> {
-        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        const GETDSK = makeStateKey<Object | Array<any>>(ref + ':query');
         if (isPlatformServer(PID)) {
-          const data = [];
-          return HTTP
-            .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents`, SQ)
-            .map((res: any) => {
-              res.forEach((doc) => {
-                const documentData = {};
-                if (doc.document.fields) {
-                  Object.keys(doc.document.fields).forEach((fieldName) => {
-                    const fieldType = Object.keys(doc.document.fields.fieldName);
-                    documentData[fieldName] = doc.document.fields.fieldName[fieldType[0]];
-                  });
-                  data.push(documentData);
-                }
-              });
-              return data;
-            })
-            .do((payload) => {
-              state.set(dataStateKey, payload);
-            });
+          return SQHFS(GETDSK);
         }
         if (isPlatformBrowser(PID)) {
           const data = [];
-          const SSRedValue = state.get(dataStateKey, []);
+          const SSRedValue = state.get(GETDSK, []);
           const VALUE = new BehaviorSubject<any>(SSRedValue);
           BQ.get().then((snapshot) => {
             snapshot.forEach((doc) => {
@@ -370,6 +354,8 @@ export class AngularFireLiteFirestore {
 
 
   // ------------- Transactions and Batched Writes -----------------//
+
+  // TODO: Add Transactions SSR support
 
   transaction(): Transaction {
     if (this.browser) {
@@ -413,8 +399,12 @@ export class AngularFireLiteFirestore {
           }))
         }
       }
+    } else {
+      console.log('transactions SSR is not supported yet');
     }
   }
+
+  // TODO: Add batched writes SSR support
 
   batch(): Batch {
     if (this.browser) {
@@ -437,6 +427,8 @@ export class AngularFireLiteFirestore {
           return fromPromise(b.commit())
         }
       }
+    } else {
+      console.log('batched writes SSR is not supported yet');
     }
   }
 
