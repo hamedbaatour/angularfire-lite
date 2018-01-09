@@ -1,6 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { AngularFireLiteApp } from '../core.service';
@@ -57,8 +58,8 @@ export class AngularFireLiteAuth {
   }
 
 
-  currentUser(): Subject<any> {
-    const CURRENT_USER = new Subject();
+  currentUser(): BehaviorSubject<any> {
+    const CURRENT_USER = new BehaviorSubject();
     CURRENT_USER.next(this.auth.currentUser);
     return CURRENT_USER;
   }
