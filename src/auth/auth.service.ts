@@ -166,7 +166,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      fromPromise(this.auth.currentUser.updateProfile(data));
+      return fromPromise(this.auth.currentUser.updateProfile(data));
     }
   }
 
