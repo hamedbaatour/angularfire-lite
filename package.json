@@ -27,7 +27,7 @@
   "devDependencies": {
     "ng-packagr": "^2.0.0-rc.9",
     "tsickle": "^0.25.5",
-    "tslint": "~5.7.0",
+    "tslint": "~5.9.0",
     "@angular/compiler-cli": "^5.0.0",
     "typescript": "~2.4.2",
     "firebase": "4.8.0",
