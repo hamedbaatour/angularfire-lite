@@ -122,7 +122,7 @@ export class AppModule { }
 
 - **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some simple additions.
 
-<h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite/wiki/AngularFire-Lite-Documentation">Full Documentation </a></h2>
+<h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite/wiki">Full Documentation </a></h2>
 
 <p>You can also clone the live demo to use it as a starting point in the meantime as <a href="https://github.com/hamedbaatour/afl-cli"><b>AFL CLI</b></a> gets launched officially soon. so stay tuned!</p>
 <h5>Angular 5:</h5> 
