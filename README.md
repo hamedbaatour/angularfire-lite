@@ -18,7 +18,7 @@
 | -------------         |:-------------:|         :-------------------:  |
 | Authentication        | :heavy_check_mark:    | :heavy_check_mark:     |
 | Firestore             | :heavy_check_mark:    |  :heavy_check_mark:    |
-| Storage               | :heavy_check_mark:    |  :x:                   |
+| Storage               | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
