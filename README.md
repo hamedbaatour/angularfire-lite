@@ -23,7 +23,7 @@
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
 | Transactions and Batched Writes | :heavy_check_mark: <br> Observable Based    |  :x:  |
-| Package Size | <a href="https://arve0.github.io/npm-download-size/#angularfire-lite" target="blank">**76 KB**</a> :zap: | <a href="https://arve0.github.io/npm-download-size/#angularfire2" target="blank">**115 KB**</a> :turtle: |
+| NPM Package Size | <a href="https://arve0.github.io/npm-download-size/#angularfire-lite" target="blank">**76 KB**</a> :zap: | <a href="https://arve0.github.io/npm-download-size/#angularfire2" target="blank">**124 KB**</a> :turtle: |
 
 [![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/91e29b8e406bb37404ab943519c374f1247957ec/SSR.svg)](#)
 ### Finally SSR with Firebase!
@@ -56,7 +56,7 @@ Angularfire Lite is the very first angular library to support server side render
 
 ```bash
  
-npm install --save angularfire-lite firebase@4.8.0
+npm install --save angularfire-lite firebase
  
 ```
 <br>
@@ -122,18 +122,18 @@ export class AppModule { }
 
 - **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some simple additions.
 
-<h3 align="center">:warning: In Progress :construction:</h3>
-
-<h4 align="center">Full Documentation</h4>
-<h4 align="center">Practical Examples</h4>
+<h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite/wiki/AngularFire-Lite-Documentation">Full Documentation </a></h2>
 
 <br>
 
-For now please use the Demo App as guide to get you started as I finish designing the new docs so check it out:
+<p>You can also clone the live demo to use it as a starting point in the meantime as <a href="https://github.com/hamedbaatour/afl-cli"><b>AFL CLI</b></a> gets launched officially soon. so stay tuned!</p>
 
 <br>
 
-<h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-demo"> DEMO APP </a></h2>
+<h5>Angular 5:</h5> 
+<h3 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-demo"> DEMO APP </a></h3>
+<h5>Ionic 2:</h5>
+<h3 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-ionic-demo"> DEMO APP </a></h3>
 
 <br>
 <br>
@@ -145,7 +145,7 @@ ___
 
 - **Will be there any breaking changes to AngularFire Lite?**
 
-AngularFire Lite is still in beta so some changes may happen however we will try to avoid that as much as possible and keep the API consistent across all the firebase services provided.
+AngularFire Lite will try to avoid breaking changes as much as possible and keep the API consistent across all the firebase services provided.
 
 
 ### Contributors:
