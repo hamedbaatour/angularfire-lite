@@ -16,9 +16,9 @@
 
 | Features              | AngularFire Lite         | AngularFire2  |
 | -------------         |:-------------:|         :-------------------:  |
-| Authentication        | :heavy_check_mark:    | :heavy_check_mark:     |
+| Authentication        | :heavy_check_mark:    |  :heavy_check_mark:     |
 | Firestore             | :heavy_check_mark:    |  :heavy_check_mark:    |
-| Storage               | :heavy_check_mark:    |  :heavy_check_mark:    |
+| Storage               | :heavy_check_mark:    |  :heavy_check_mark:|
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
@@ -124,18 +124,12 @@ export class AppModule { }
 
 <h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite/wiki/AngularFire-Lite-Documentation">Full Documentation </a></h2>
 
-<br>
-
 <p>You can also clone the live demo to use it as a starting point in the meantime as <a href="https://github.com/hamedbaatour/afl-cli"><b>AFL CLI</b></a> gets launched officially soon. so stay tuned!</p>
-
-<br>
-
 <h5>Angular 5:</h5> 
-<h3 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-demo"> DEMO APP </a></h3>
+<h3><a href="https://github.com/hamedbaatour/angularfire-lite-demo">DEMO APP</a></h3>
 <h5>Ionic 2:</h5>
-<h3 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite-ionic-demo"> DEMO APP </a></h3>
+<h3><a href="https://github.com/hamedbaatour/angularfire-lite-ionic-demo"> DEMO APP </a></h3>
 
-<br>
 <br>
 
 [![angularfire-lite-faq](https://cdn.rawgit.com/hamedbaatour/fbbd36bce4d7e5a4ec0e07b71b71db15/raw/d58da0f50d52c27815832f7587b29d5b3d58eb3f/FAQ.svg)](#)
