@@ -236,7 +236,7 @@ export class AngularFireLiteAuth {
     return fromPromise(this.auth.currentUser.reauthenticateWithCredential(credentials));
   }
 
-  deletePermanently(credentials): Observable<any> {
+  deletePermanently(): Observable<any> {
     if (this.server) {
       return fromPromise(this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/deleteAccount?key=${this.config.apiKey}`, {
