@@ -193,11 +193,11 @@ export class AngularFireLiteAuth {
     }
   }
 
-  updatePassword(newPassword: string, uid?: string) {
+  updatePassword(newPassword: string) {
     if (this.server) {
       return this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/setAccountInfo?key=${this.config.apiKey}`, {
-          'idToken': uid,
+          'idToken': idToken,
           'password': newPassword,
           'returnSecureToken': true
         });
