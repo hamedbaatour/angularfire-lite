@@ -23,7 +23,7 @@
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
 | Server Side Rendering | :heavy_check_mark:    |  :x:                   |
 | Transactions and Batched Writes | :heavy_check_mark: <br> Observable Based    |  :x:  |
-| NPM Package Size | <a href="https://arve0.github.io/npm-download-size/#angularfire-lite" target="blank">**76 KB**</a> :zap: | <a href="https://arve0.github.io/npm-download-size/#angularfire2" target="blank">**124 KB**</a> :turtle: |
+| NPM Package Size | <a href="https://arve0.github.io/npm-download-size/#angularfire-lite" target="blank">**84 KB**</a> :zap: | <a href="https://arve0.github.io/npm-download-size/#angularfire2" target="blank">**124 KB**</a> :turtle: |
 
 [![angluarfire-lite-ssr](https://cdn.rawgit.com/hamedbaatour/34003410a08925cb4301ce06fbc3936e/raw/91e29b8e406bb37404ab943519c374f1247957ec/SSR.svg)](#)
 ### Finally SSR with Firebase!
