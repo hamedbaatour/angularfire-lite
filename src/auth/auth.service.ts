@@ -152,9 +152,16 @@ export class AngularFireLiteAuth {
   }
 
 
-  updateProfile(data: { displayName: string, photoURL: string },
-                deleteAttribute?: 'PHOTO_URL' | 'DISPLAY_NAME' | '\'PHOTO_URL\' , \'DISPLAY_NAME\'') {
+  updateProfile(data: { displayName: string | null, photoURL: string | null }) {
     if (this.server) {
+      let deleteAttribute;
+      if (data.displayName === null && data.photoURL === null) {
+        deleteAttribute = '\'PHOTO_URL\' , \'DISPLAY_NAME\''
+      } else if (data.displayName === null) {
+        deleteAttribute = 'DISPLAY_NAME'
+      } else if (data.photoURL === null) {
+        deleteAttribute = 'PHOTO_URL'
+      }
       return this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/setAccountInfo?key=${this.config.apiKey}`, {
           'idToken': idToken,
