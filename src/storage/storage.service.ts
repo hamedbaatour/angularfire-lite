@@ -23,7 +23,7 @@ export class AngularFireLiteStorage {
 
   // ------------- Upload -----------------//
 
-  upload(ref: string, file: File | Blob | Uint8Array, metadata?: Object): Observable<any> {
+  upload(ref: string, file: File | Blob | Uint8Array | any, metadata?: Object | any): Observable<any> {
     if (this.browser) {
       return fromPromise(this.child(ref).put(file, metadata));
     }
@@ -65,7 +65,7 @@ export class AngularFireLiteStorage {
   }
 
 
-  updateMetadata(ref: string, metadata: Object): Observable<any> {
+  updateMetadata(ref: string, metadata: Object | any): Observable<any> {
     if (this.browser) {
       return fromPromise(this.child(ref).updateMetadata(metadata));
     }
