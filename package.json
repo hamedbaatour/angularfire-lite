@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "ng-packagr": "^2.0.0",
-    "tsickle": "^0.25.5",
+    "tsickle": "^0.27.0",
     "tslint": "~5.9.0",
     "@angular/compiler-cli": "^5.0.0",
     "typescript": "~2.4.2",
