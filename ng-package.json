@@ -3,6 +3,9 @@
   "dest": "./dist",
   "workingDirectory": ".ng_build",
   "lib": {
-    "entryFile": "./src/public_api.ts"
+    "entryFile": "./src/public_api.ts",
+    "umdModuleIds": {
+      "firebase": "firebase"
+    }
   }
 }
