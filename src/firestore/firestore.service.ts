@@ -88,7 +88,6 @@ export class AngularFireLiteFirestore {
       const SSRedValue = this.state.get(dataStateKey, []);
       const DATA = new BehaviorSubject<any>(SSRedValue);
 
-
       if (slashes % 2 === 0) {
         this.firestore.collection(ref).onSnapshot((snapshot) => {
           snapshot.docs.forEach((doc) => {
@@ -197,7 +196,7 @@ export class AngularFireLiteFirestore {
 
     return {
 
-      where(document: string, comparison: string, value: string): Query {
+      where(document: string, comparison: string, value: any): Query {
         let SOP = '';
         switch (comparison) {
           case '<':
@@ -316,10 +315,10 @@ export class AngularFireLiteFirestore {
           return SQHFS(ONDSK);
         }
         if (isPlatformBrowser(PID)) {
-          const data = [];
           const SSRedValue = state.get(ONDSK, []);
           const VALUE = new BehaviorSubject<any>(SSRedValue);
           BQ.onSnapshot((snapshot) => {
+            const data = [];
             snapshot.forEach((doc) => {
               data.push(doc.data());
             });
@@ -467,7 +466,7 @@ export interface Transaction {
 }
 
 export interface Query {
-  where(document: string, comparison: string, value: string): Query;
+  where(document: string, comparison: string, value: any): Query;
 
   startAt(...startValue: Array<string>): Query;
 
