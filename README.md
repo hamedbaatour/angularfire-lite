@@ -4,14 +4,25 @@
   <h1 align="center">AngularFire Lite</h1>
     <p align="center">lightweight wrapper to use Firebase API with Angular.</p>
 </p>
+<div align="center">
+  
+[![travis][travis]][travis-url]
+[![circleci][circleci]][circleci-url]
+[![npmv][npmv]][npmv-url]
+[![npmdown][npmdown]][npmdown-url]
+[![daviddep][daviddep]][daviddep-url]
+[![daviddevdep][daviddevdep]][daviddevdep-url]
+[![greenkeeper][greenkeeper]][greenkeeper-url]
 
-[![Travis](https://img.shields.io/travis/hamedbaatour/angularfire-lite.svg)](https://travis-ci.org/hamedbaatour/angularfire-lite)
-[![CircleCI](https://circleci.com/gh/hamedbaatour/angularfire-lite.svg?style=shield)](https://circleci.com/gh/hamedbaatour/angularfire-lite)
-[![npm version](https://badge.fury.io/js/angularfire-lite.svg)](https://www.npmjs.com/package/angularfire-lite)
-[![dependencies Status](https://david-dm.org/hamedbaatour/angularfire-lite/status.svg)](https://david-dm.org/hamedbaatour/angularfire-lite)
-[![Greenkeeper](https://badges.greenkeeper.io/hamedbaatour/angularfire-lite.svg)](#)
-[![npm](https://img.shields.io/npm/dt/angularfire-lite.svg)](https://www.npmjs.com/package/angularfire-lite)
+<gr>
+  
  [![Join the chat at https://gitter.im/angularfire-lite/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angularfire-lite/Lobby)
+[![Ng-packgr](https://img.shields.io/badge/powered%20by-ng--packagr-blue.svg)](https://github.com/dherges/ng-packagr)
+![license](https://img.shields.io/github/license/hamedbaatour/angularfire-lite.svg)
+<br>
+</div>
+
+
 
 
 | Features              | AngularFire Lite         | AngularFire2  |
@@ -122,7 +133,7 @@ export class AppModule { }
 
 - **Simple API**: AngularFire Lite has a simple straight forward syntax similar to the native Firebase API plus some simple additions.
 
-<h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite/wiki">Full Documentation </a></h2>
+<h2 align="center"><a href="https://github.com/hamedbaatour/angularfire-lite/wiki">Documentation </a></h2>
 
 <p>You can also clone the live demo to use it as a starting point in the meantime as <a href="https://github.com/hamedbaatour/afl-cli"><b>AFL CLI</b></a> gets launched officially soon. so stay tuned!</p>
 <h5>Angular 5:</h5> 
@@ -172,3 +183,27 @@ ___
 ___
 
 Doors are open! I will personally design for you a maintainer card just like the one above too :wink:
+
+
+
+
+[travis]: https://img.shields.io/travis/hamedbaatour/angularfire-lite.svg
+[travis-url]: https://travis-ci.org/hamedbaatour/angularfire-lite
+
+[circleci]: https://circleci.com/gh/hamedbaatour/angularfire-lite.svg?style=shield
+[circleci-url]: https://circleci.com/gh/hamedbaatour/angularfire-lite
+
+[npmv]: https://badge.fury.io/js/angularfire-lite.svg
+[npmv-url]: https://www.npmjs.com/package/angularfire-lite
+
+[npmdown]: https://img.shields.io/npm/dt/angularfire-lite.svg
+[npmdown-url]: https://www.npmjs.com/package/angularfire-lite
+
+[daviddep]: https://david-dm.org/hamedbaatour/angularfire-lite/status.svg
+[daviddep-url]: https://david-dm.org/hamedbaatour/angularfire-lite
+
+[daviddevdep]: https://david-dm.org/hamedbaatour/angularfire-lite/dev-status.svg
+[daviddevdep-url]: https://david-dm.org/hamedbaatour/angularfire-lite?type=dev
+
+[greenkeeper]: https://badges.greenkeeper.io/hamedbaatour/angularfire-lite.svg
+[greenkeeper-url]: #
