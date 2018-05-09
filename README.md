@@ -6,6 +6,9 @@
 </p>
 <div align="center">
   
+<img src="https://cdn-images-1.medium.com/max/1800/1*Gdz_rBj49aPqhhAQpeYtBA.gif" height="180" />
+
+
 [![travis][travis]][travis-url]
 [![circleci][circleci]][circleci-url]
 [![npmv][npmv]][npmv-url]
@@ -14,7 +17,7 @@
 [![daviddevdep][daviddevdep]][daviddevdep-url]
 [![greenkeeper][greenkeeper]][greenkeeper-url]
 
-<gr>
+<br>
   
  [![Join the chat at https://gitter.im/angularfire-lite/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/angularfire-lite/Lobby)
 [![Ng-packgr](https://img.shields.io/badge/powered%20by-ng--packagr-blue.svg)](https://github.com/dherges/ng-packagr)
