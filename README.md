@@ -35,7 +35,8 @@
 | Storage               | :heavy_check_mark:    |  :heavy_check_mark:|
 | Realtime Database     | :heavy_check_mark:    |  :heavy_check_mark:    |
 | Cloud Messaging       | :heavy_check_mark:    |  :x:                   |
-| Server Side Rendering | :heavy_check_mark:    |  :x:                   |
+| Server Side Rendering | :heavy_check_mark:    |  :heavy_plus_sign:  :heavy_minus_sign: |
+| State Transfer | :heavy_check_mark:    |  :x:  |
 | Transactions and Batched Writes | :heavy_check_mark: <br> Observable Based    |  :x:  |
 | NPM Package Size | <a href="https://arve0.github.io/npm-download-size/#angularfire-lite" target="blank">**84 KB**</a> :zap: | <a href="https://arve0.github.io/npm-download-size/#angularfire2" target="blank">**124 KB**</a> :turtle: |
 
