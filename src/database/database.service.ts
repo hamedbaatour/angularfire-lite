@@ -1,21 +1,17 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { AngularFireLiteApp } from '../core.service';
 import { HttpClient } from '@angular/common/http';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-
-import 'rxjs/add/operator/map';
-
-import { database } from 'firebase/app';
-
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { FirebaseDatabase } from '@firebase/database-types';
+import 'firebase/database';
 
 @Injectable()
 export class AngularFireLiteDatabase {
 
-  private readonly database: database.Database;
+  private readonly database: FirebaseDatabase;
   private readonly config;
   private readonly server = isPlatformServer(this.platformId);
   private readonly browser = isPlatformBrowser(this.platformId);
@@ -81,48 +77,12 @@ export class AngularFireLiteDatabase {
     }
   }
 
-  private SRH(ref, DSK) {
-    return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-      .map((payload) => {
-        if (!!payload && typeof payload === 'object') {
-          const result = Object.keys(payload).map((key) => {
-            return [payload[key]];
-          });
-          this.state.set(DSK, result);
-          return result;
-        } else {
-          this.state.set(DSK, payload);
-          return payload;
-        }
-      });
-  }
-
-  private BRH(ref, event, DSK) {
-    if (this.browser) {
-      const SSRedValue = this.state.get(DSK, []);
-      const DATA = new BehaviorSubject<any>(SSRedValue);
-      this.ref(ref).on(event, (snapshot) => {
-        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
-          const result = Object.keys(snapshot.val()).map(function (key) {
-            return [snapshot.val()[key]];
-          });
-          DATA.next(result);
-        } else {
-          DATA.next(snapshot.val());
-        }
-      });
-      return DATA;
-    }
-  }
-
-  // ------------- Write -----------------//
-
   write(ref: string, data: Object): Observable<any> {
     if (this.server) {
       return this.http.put(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (this.browser) {
-      return fromPromise(this.ref(ref).set(data));
+      return from(this.ref(ref).set(data));
     }
   }
 
@@ -131,33 +91,29 @@ export class AngularFireLiteDatabase {
       return this.http.post(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (this.browser) {
-      return fromPromise(this.ref(ref).push(data));
+      return from(this.ref(ref).push(data));
     }
   }
+
+  // ------------- Write -----------------//
 
   update(ref: string, data: any): Observable<any> {
     if (this.server) {
       return this.http.patch(`https://${this.config.projectId}.firebaseio.com/${ref}.json?print=silent`, data);
     }
     if (this.browser) {
-      return fromPromise(this.ref(ref).update(data));
+      return from(this.ref(ref).update(data));
     }
   }
-
-  // ------------- Delete -----------------//
 
   remove(ref: string): Observable<any> {
     if (this.server) {
       return this.http.delete(`https://${this.config.projectId}.firebaseio.com/${ref}.json`);
     }
     if (this.browser) {
-      return fromPromise(this.ref(ref).remove());
+      return from(this.ref(ref).remove());
     }
   }
-
-
-  // ------------- Query -----------------//
-
 
   query(ref: string) {
     const PID = this.platformId;
@@ -168,7 +124,7 @@ export class AngularFireLiteDatabase {
 
     const SQH = function (REF, FSQ, DSK) {
       return http.get(`https://${config.projectId}.firebaseio.com/${REF}.json?${FSQ}`)
-        .map((payload) => {
+        .pipe(map((payload) => {
           if (!!payload && typeof payload === 'object') {
             const result = Object.keys(payload).map((key) => {
               return [payload[key]];
@@ -179,7 +135,7 @@ export class AngularFireLiteDatabase {
             state.set(DSK, payload);
             return payload;
           }
-        });
+        }));
     };
 
     const BQH = function (BS) {
@@ -192,7 +148,7 @@ export class AngularFireLiteDatabase {
         } else {
           BS.next(snapshot.val());
         }
-      }
+      };
     };
 
     let SQ = '';
@@ -219,7 +175,7 @@ export class AngularFireLiteDatabase {
 
       isEqual(query: null | any): boolean {
         if (isPlatformBrowser(PID)) {
-          return db.ref(ref).isEqual(query)
+          return db.ref(ref).isEqual(query);
         }
       },
 
@@ -285,6 +241,45 @@ export class AngularFireLiteDatabase {
         }
       }
 
+    };
+  }
+
+  // ------------- Delete -----------------//
+
+  private SRH(ref, DSK) {
+    return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+      .pipe(map((payload) => {
+        if (!!payload && typeof payload === 'object') {
+          const result = Object.keys(payload).map((key) => {
+            return [payload[key]];
+          });
+          this.state.set(DSK, result);
+          return result;
+        } else {
+          this.state.set(DSK, payload);
+          return payload;
+        }
+      }));
+  }
+
+
+  // ------------- Query -----------------//
+
+  private BRH(ref, event, DSK) {
+    if (this.browser) {
+      const SSRedValue = this.state.get(DSK, []);
+      const DATA = new BehaviorSubject<any>(SSRedValue);
+      this.ref(ref).on(event, (snapshot) => {
+        if (!!snapshot.val() && typeof snapshot.val() === 'object') {
+          const result = Object.keys(snapshot.val()).map(function (key) {
+            return [snapshot.val()[key]];
+          });
+          DATA.next(result);
+        } else {
+          DATA.next(snapshot.val());
+        }
+      });
+      return DATA;
     }
   }
 }

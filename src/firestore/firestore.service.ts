@@ -2,24 +2,17 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { AngularFireLiteApp } from '../core.service';
 import { HttpClient } from '@angular/common/http';
 import { FirebaseAppConfig } from '../core.module';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import { TransferState, makeStateKey } from '@angular/platform-browser';
+import { makeStateKey, TransferState } from '@angular/platform-browser';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
-
-import { firestore } from 'firebase/app';
+import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { FirebaseFirestore } from '@firebase/firestore-types';
 import 'firebase/firestore';
-
 
 @Injectable()
 export class AngularFireLiteFirestore {
 
-  private readonly firestore: firestore.Firestore;
+  private readonly firestore: FirebaseFirestore;
   private readonly config: FirebaseAppConfig;
   private readonly browser = isPlatformBrowser(this.platformId);
 
@@ -31,8 +24,8 @@ export class AngularFireLiteFirestore {
     this.config = app.config();
   }
 
-
   // ------------- Read -----------------//
+
 
   read(ref: string): Observable<any> | BehaviorSubject<any> {
     const dataStateKey = makeStateKey<Object>(ref);
@@ -50,38 +43,38 @@ export class AngularFireLiteFirestore {
 
       return this.http
         .get(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${ref}`)
-        .map((res: any) => {
-          const docData = {};
-          if (slashes % 2 !== 0) {
-            Object.keys(res.fields)
-              .forEach((key) => {
-                for (const keyValue in res.fields[key]) {
-                  if (keyValue) {
-                    docData[key] = res.fields[key][keyValue];
-                  }
-                }
-              });
-            return docData;
-          } else {
-            const colData = [];
-            res.documents.forEach((doc) => {
-              const singleDocData = {};
-              Object.keys(doc.fields)
+        .pipe(map((res: any) => {
+            const docData = {};
+            if (slashes % 2 !== 0) {
+              Object.keys(res.fields)
                 .forEach((key) => {
-                  for (const keyValue in doc.fields[key]) {
+                  for (const keyValue in res.fields[key]) {
                     if (keyValue) {
-                      singleDocData[key] = doc.fields[key][keyValue];
+                      docData[key] = res.fields[key][keyValue];
                     }
                   }
                 });
-              colData.push(singleDocData);
-            });
-            return colData;
-          }
-        })
-        .do((pl) => {
-          this.state.set(dataStateKey, pl);
-        });
+              return docData;
+            } else {
+              const colData = [];
+              res.documents.forEach((doc) => {
+                const singleDocData = {};
+                Object.keys(doc.fields)
+                  .forEach((key) => {
+                    for (const keyValue in doc.fields[key]) {
+                      if (keyValue) {
+                        singleDocData[key] = doc.fields[key][keyValue];
+                      }
+                    }
+                  });
+                colData.push(singleDocData);
+              });
+              return colData;
+            }
+          })
+          , tap((pl) => {
+            this.state.set(dataStateKey, pl);
+          }));
     }
     if (this.browser) {
       const data = [];
@@ -110,20 +103,20 @@ export class AngularFireLiteFirestore {
 
   write(ref: string, data: Object, merge?: boolean): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.firestore.doc(ref).set(data, {merge: merge}));
+      return from(this.firestore.doc(ref).set(data, {merge: merge}));
     }
   }
 
 
   push(ref: string, data: Object): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.firestore.collection(ref).add(data));
+      return from(this.firestore.collection(ref).add(data));
     }
   }
 
   update(ref: string, data: Object): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.firestore.doc(ref).update(data));
+      return from(this.firestore.doc(ref).update(data));
     }
   }
 
@@ -135,20 +128,20 @@ export class AngularFireLiteFirestore {
         .delete(`https://firestore.googleapis.com/v1beta1/projects/${this.config.projectId}/databases/(default)/documents/${DocumentRef}`);
     }
     if (this.browser) {
-      return fromPromise(this.firestore.doc(DocumentRef).delete());
+      return from(this.firestore.doc(DocumentRef).delete());
     }
   }
 
   removeField(ref: string, ...fields): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.firestore.doc(ref).update(fields));
+      return from(this.firestore.doc(ref).update(fields));
     }
 
   }
 
   removeCollection(collectionRef: string): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.firestore.collection(collectionRef).get().then((snapshot) => {
+      return from(this.firestore.collection(collectionRef).get().then((snapshot) => {
         snapshot.docs.forEach((doc) => {
           this.firestore.batch().delete(doc.ref);
         });
@@ -172,20 +165,20 @@ export class AngularFireLiteFirestore {
       const data = [];
       return HTTP
         .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents:runQuery`, SQ)
-        .map((res: any) => {
-          for (const doc of res) {
-            const documentData = {};
-            Object.keys(doc.document.fields).forEach((fieldName) => {
-              const fieldType = Object.keys(doc.document.fields[fieldName]);
-              documentData[fieldName] = doc.document.fields[fieldName][fieldType[0]];
-            });
-            data.push(documentData);
-          }
-          return data;
-        })
-        .do((pl) => {
-          state.set(DSK, pl);
-        });
+        .pipe(map((res: any) => {
+            for (const doc of res) {
+              const documentData = {};
+              Object.keys(doc.document.fields).forEach((fieldName) => {
+                const fieldType = Object.keys(doc.document.fields[fieldName]);
+                documentData[fieldName] = doc.document.fields[fieldName][fieldType[0]];
+              });
+              data.push(documentData);
+            }
+            return data;
+          })
+          , tap((pl) => {
+            state.set(DSK, pl);
+          }));
     };
 
     const SQ = {
@@ -347,7 +340,7 @@ export class AngularFireLiteFirestore {
         }
       }
 
-    }
+    };
 
   }
 
@@ -363,10 +356,10 @@ export class AngularFireLiteFirestore {
       let readCount = 0;
       const transactions = {
         get(ref) {
-          return fs.doc(ref).get()
+          return fs.doc(ref).get();
         },
         set(ref, data) {
-          return fs.doc(ref).set(data)
+          return fs.doc(ref).set(data);
         }
       };
       return {
@@ -393,13 +386,24 @@ export class AngularFireLiteFirestore {
           return getSubject;
         },
         run(): Observable<any> {
-          return fromPromise(fs.runTransaction(() => {
-            return transactionToRun
-          }))
+          return from(fs.runTransaction(() => {
+            return transactionToRun;
+          }));
         }
-      }
+      };
     } else {
-      console.log('transactions SSR is not supported yet');
+      return {
+        set(ref: string, data: Object): Transaction {
+          return this;
+        },
+
+        get(ref: string): Subject<any> {
+          return new Subject();
+        },
+        run(): Observable<any> {
+          return of();
+        }
+      };
     }
   }
 
@@ -423,11 +427,24 @@ export class AngularFireLiteFirestore {
           return this;
         },
         commit(): Observable<any> {
-          return fromPromise(b.commit())
+          return from(b.commit());
         }
-      }
+      };
     } else {
-      console.log('batched writes SSR is not supported yet');
+      return {
+        set(ref: string, data: Object) {
+          return this;
+        },
+        update(ref: string, data: Object): Batch {
+          return this;
+        },
+        delete(ref: string): Batch {
+          return this;
+        },
+        commit(): Observable<any> {
+          return of();
+        }
+      };
     }
   }
 
