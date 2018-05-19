@@ -6,6 +6,7 @@
     "entryFile": "./src/public_api.ts",
     "umdModuleIds": {
       "firebase/app": "firebase/app",
+      "@firebase/app": "@firebase/app",
       "rxjs": "rxjs"
     }
   }

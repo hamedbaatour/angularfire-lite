@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-
-import * as firebase from 'firebase/app';
+import { firebase } from '@firebase/app';
 import { FirebaseAppConfig } from './core.module';
-
+import 'firebase/app';
 
 @Injectable()
 export class AngularFireLiteApp {
+  // fb: firebase;
   constructor(private appConfig: FirebaseAppConfig) {
+    // this.fb = firebaseApp;
   }
 
   public instance() {
