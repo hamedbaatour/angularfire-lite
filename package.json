@@ -25,7 +25,7 @@
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
-    "ng-packagr": "^2.4.2",
+    "ng-packagr": "^3.0.0",
     "@angular/common": "^5.2.0",
     "@angular/compiler": "^5.2.0",
     "@angular/core": "^5.2.0",
