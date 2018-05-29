@@ -28,7 +28,7 @@ export class AngularFireLiteFirestore {
 
 
   read(ref: string): Observable<any> | BehaviorSubject<any> {
-    const dataStateKey = makeStateKey<Object>(ref);
+    const dataStateKey = makeStateKey<Object>(ref + 'firestore:read');
 
     const refArray = ref.split('/');
     if (refArray[0] === '/') {
@@ -303,7 +303,7 @@ export class AngularFireLiteFirestore {
       },
 
       on(): BehaviorSubject<any> | Observable<any> {
-        const ONDSK = makeStateKey<Object | Array<any>>(ref + ':query');
+        const ONDSK = makeStateKey<Object | Array<any>>(ref + 'firestore:query');
         if (isPlatformServer(PID)) {
           return SQHFS(ONDSK);
         }
@@ -322,7 +322,7 @@ export class AngularFireLiteFirestore {
       },
 
       get(): BehaviorSubject<any> | Observable<any> {
-        const GETDSK = makeStateKey<Object | Array<any>>(ref + ':query');
+        const GETDSK = makeStateKey<Object | Array<any>>(ref + 'firestore:query');
         if (isPlatformServer(PID)) {
           return SQHFS(GETDSK);
         }

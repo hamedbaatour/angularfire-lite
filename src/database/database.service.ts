@@ -28,7 +28,7 @@ export class AngularFireLiteDatabase {
   // ------------- Read -----------------//
 
   read(ref: string): BehaviorSubject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+    const dataStateKey = makeStateKey<Object | Array<any>>(ref + 'rtd:read');
     if (this.server) {
       return this.SRH(ref, dataStateKey);
     }
@@ -38,7 +38,7 @@ export class AngularFireLiteDatabase {
   }
 
   childAdded(ref: string): BehaviorSubject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>(ref);
+    const dataStateKey = makeStateKey<Object>(ref + 'rtd:child_added');
     if (this.server) {
       return this.SRH(ref, dataStateKey);
     }
@@ -48,7 +48,7 @@ export class AngularFireLiteDatabase {
   }
 
   childChanged(ref: string): BehaviorSubject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>(ref);
+    const dataStateKey = makeStateKey<Object>(ref + 'rtd:child_changed');
     if (this.server) {
       return this.SRH(ref, dataStateKey);
     }
@@ -58,7 +58,7 @@ export class AngularFireLiteDatabase {
   }
 
   childRemoved(ref: string): BehaviorSubject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>(ref);
+    const dataStateKey = makeStateKey<Object>(ref + 'rtd:child_removed');
     if (this.server) {
       return this.SRH(ref, dataStateKey);
     }
@@ -68,7 +68,7 @@ export class AngularFireLiteDatabase {
   }
 
   childMoved(ref: string): BehaviorSubject<any> | Observable<any> {
-    const dataStateKey = makeStateKey<Object>(ref);
+    const dataStateKey = makeStateKey<Object>(ref + 'rtd:child_moved');
     if (this.server) {
       return this.SRH(ref, dataStateKey);
     }
@@ -126,8 +126,9 @@ export class AngularFireLiteDatabase {
       return http.get(`https://${config.projectId}.firebaseio.com/${REF}.json?${FSQ}`)
         .pipe(map((payload) => {
           if (!!payload && typeof payload === 'object') {
-            const result = Object.keys(payload).map((key) => {
-              return [payload[key]];
+            const result = [];
+            Object.keys(payload).forEach((key) => {
+              result.push(payload[key]);
             });
             state.set(DSK, result);
             return result;
@@ -216,7 +217,7 @@ export class AngularFireLiteDatabase {
       },
 
       on(event: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | BehaviorSubject<any> {
-        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        const dataStateKey = makeStateKey<Object | Array<any>>(ref + 'rtd');
         if (isPlatformServer(PID)) {
           return SQH(ref, SQ, dataStateKey);
         }
@@ -229,7 +230,7 @@ export class AngularFireLiteDatabase {
       },
 
       once(event: 'value' | 'child_added' | 'child_changed' | 'child_removed' | 'child_moved'): Observable<any> | BehaviorSubject<any> {
-        const dataStateKey = makeStateKey<Object | Array<any>>(ref);
+        const dataStateKey = makeStateKey<Object | Array<any>>(ref + 'rtd');
         if (isPlatformServer(PID)) {
           return SQH(ref, SQ, dataStateKey);
         }
@@ -244,26 +245,25 @@ export class AngularFireLiteDatabase {
     };
   }
 
-  // ------------- Delete -----------------//
 
   private SRH(ref, DSK) {
-    return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
-      .pipe(map((payload) => {
-        if (!!payload && typeof payload === 'object') {
-          const result = Object.keys(payload).map((key) => {
-            return [payload[key]];
-          });
-          this.state.set(DSK, result);
-          return result;
-        } else {
-          this.state.set(DSK, payload);
-          return payload;
-        }
-      }));
+    if (this.server) {
+      return this.http.get(`https://${this.config.projectId}.firebaseio.com/${ref}.json`)
+        .pipe(map((payload) => {
+          if (!!payload && typeof payload === 'object') {
+            const result = Object.keys(payload).map((key) => {
+              return [payload[key]];
+            });
+            this.state.set(DSK, result);
+            return result;
+          } else {
+            this.state.set(DSK, payload);
+            return payload;
+          }
+        }));
+    }
   }
 
-
-  // ------------- Query -----------------//
 
   private BRH(ref, event, DSK) {
     if (this.browser) {
