@@ -158,13 +158,17 @@ export class AngularFireLiteFirestore {
     const state = this.state;
     const fs = this.firestore;
     const SSQ: any = {
-      'from': [{'collectionId': `${ref}`}]
+      'from': [{'collectionId': ref}]
+    };
+    const SQ = {
+      'structuredQuery': SSQ
     };
 
-    const SQHFS = function (DSK) {
+    function SQHFS(DSK) {
       const data = [];
       return HTTP
-        .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents:runQuery`, SQ)
+        .post(`https://firestore.googleapis.com/v1beta1/projects/${CONFIG.projectId}/databases/(default)/documents:runQuery`,
+          JSON.stringify(SQ))
         .pipe(map((res: any) => {
             for (const doc of res) {
               const documentData = {};
@@ -179,11 +183,22 @@ export class AngularFireLiteFirestore {
           , tap((pl) => {
             state.set(DSK, pl);
           }));
-    };
+    }
 
-    const SQ = {
-      'structuredQuery': SSQ
-    };
+    function FSD(value) {
+      switch (typeof value) {
+        case 'boolean':
+          return {'booleanValue': value};
+        case 'string':
+          return {'stringValue': value};
+        case 'number':
+          return {'doubleValue': value};
+        case 'object':
+          return {'arrayValue': value};
+      }
+    }
+
+
     const SQOB = [];
     let BQ = fs.collection(ref) as any;
 
@@ -208,13 +223,7 @@ export class AngularFireLiteFirestore {
             SOP = 'EQUAL';
             break;
         }
-        SSQ['where'] = {};
-        SSQ['where'].fieldFilter = {};
-        SSQ['where'].fieldFilter.field = {};
-
-        SSQ['where'].fieldFilter.field.fieldPath = ref;
-        SSQ['where'].fieldFilter.op = SOP;
-        SSQ['where'].fieldFilter.value = FormatServerData(value);
+        SSQ['where'] = {'fieldFilter': {'field': {'fieldPath': document}, 'op': SOP, 'value': FSD(value)}};
         BQ = BQ.where(document, comparison, value);
         return this;
       },
@@ -222,7 +231,7 @@ export class AngularFireLiteFirestore {
       startAt(...startValue): Query {
         const SV = [];
         startValue.forEach((value) => {
-          SV.push(FormatServerData(value));
+          SV.push(FSD(value));
         });
 
         SSQ.startAt = {};
@@ -236,7 +245,7 @@ export class AngularFireLiteFirestore {
       startAfter(...startValue): Query {
         const SV = [];
         startValue.forEach((value) => {
-          SV.push(FormatServerData(value));
+          SV.push(FSD(value));
         });
 
         SSQ.startAt = {};
@@ -250,7 +259,7 @@ export class AngularFireLiteFirestore {
       endAt(...endValue): Query {
         const SV = [];
         endValue.forEach((value) => {
-          SV.push(FormatServerData(value));
+          SV.push(FSD(value));
         });
 
         SSQ.endAt = {};
@@ -264,7 +273,7 @@ export class AngularFireLiteFirestore {
       endBefore(...endValue): Query {
         const SV = [];
         endValue.forEach((value) => {
-          SV.push(FormatServerData(value));
+          SV.push(FSD(value));
         });
 
         SSQ.endAt = {};
@@ -451,18 +460,6 @@ export class AngularFireLiteFirestore {
 
 }
 
-export function FormatServerData(value) {
-  switch (value) {
-    case (typeof value === 'boolean'):
-      return {'booleanValue': value};
-    case (typeof value === 'string'):
-      return {'stringValue': value};
-    case (typeof value === 'number'):
-      return {'doubleValue': value};
-    case (typeof value === 'object') && (value):
-      return {'arrayValue': value};
-  }
-}
 
 export interface Batch {
   set(ref: string, data: Object): Batch;
