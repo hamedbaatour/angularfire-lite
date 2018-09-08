@@ -1,17 +1,14 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
-import { fromPromise } from 'rxjs/observable/fromPromise';
 import { isPlatformBrowser } from '@angular/common';
-
-import { messaging } from 'firebase/app';
-
+import { from, Observable, Subject } from 'rxjs';
+import { FirebaseMessaging } from '@firebase/messaging-types';
+import 'firebase/messaging';
 
 @Injectable()
 export class AngularFireLiteMessaging {
 
-  private readonly messaging: messaging.Messaging;
+  private readonly messaging: FirebaseMessaging;
   private readonly browser = isPlatformBrowser(this.platformId);
 
   constructor(private app: AngularFireLiteApp,
@@ -30,7 +27,7 @@ export class AngularFireLiteMessaging {
 
   token(): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.messaging.getToken());
+      return from(this.messaging.getToken());
     }
   }
 
@@ -51,13 +48,13 @@ export class AngularFireLiteMessaging {
 
   requestPermission(): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.messaging.requestPermission());
+      return from(this.messaging.requestPermission());
     }
   }
 
   deleteToken(token: string): Observable<any> {
     if (this.browser) {
-      return fromPromise((this.messaging.deleteToken(token)));
+      return from((this.messaging.deleteToken(token)));
     }
   }
 

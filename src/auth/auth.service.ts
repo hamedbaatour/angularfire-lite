@@ -1,16 +1,14 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { fromPromise } from 'rxjs/observable/fromPromise';
 import { AngularFireLiteApp } from '../core.service';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-
-import { auth } from 'firebase/app';
+import { from, Observable, Subject } from 'rxjs';
+import { FirebaseAuth } from '@firebase/auth-types';
+import 'firebase/auth';
 
 @Injectable()
 export class AngularFireLiteAuth {
-  private readonly auth: auth.Auth;
+  private readonly auth: FirebaseAuth;
   private readonly config;
   private readonly browser = isPlatformBrowser(this.platformId);
   private readonly server = isPlatformServer(this.platformId);
@@ -65,7 +63,7 @@ export class AngularFireLiteAuth {
 
   userData(): Subject<any> | Observable<any> {
     if (this.server) {
-      return fromPromise(this.auth.currentUser.getIdToken(true).then((idToken) => {
+      return from(this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=${this.config.apiKey}`, {
           'idToken': idToken
         });
@@ -119,7 +117,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.signInWithEmailAndPassword(email, password));
+      return from(this.auth.signInWithEmailAndPassword(email, password));
     }
   }
 
@@ -130,7 +128,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.signInAnonymously());
+      return from(this.auth.signInAnonymously());
     }
   }
 
@@ -143,12 +141,12 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.createUserWithEmailAndPassword(email, password));
+      return from(this.auth.createUserWithEmailAndPassword(email, password));
     }
   }
 
   signout(): Observable<any> {
-    return fromPromise(this.auth.signOut());
+    return from(this.auth.signOut());
   }
 
 
@@ -156,11 +154,11 @@ export class AngularFireLiteAuth {
     if (this.server) {
       let deleteAttribute;
       if (data.displayName === null && data.photoURL === null) {
-        deleteAttribute = '\'PHOTO_URL\' , \'DISPLAY_NAME\''
+        deleteAttribute = '\'PHOTO_URL\' , \'DISPLAY_NAME\'';
       } else if (data.displayName === null) {
-        deleteAttribute = 'DISPLAY_NAME'
+        deleteAttribute = 'DISPLAY_NAME';
       } else if (data.photoURL === null) {
-        deleteAttribute = 'PHOTO_URL'
+        deleteAttribute = 'PHOTO_URL';
       }
       return this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/setAccountInfo?key=${this.config.apiKey}`, {
@@ -173,7 +171,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.currentUser.updateProfile(data));
+      return from(this.auth.currentUser.updateProfile(data));
     }
   }
 
@@ -189,7 +187,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.currentUser.updateEmail(newEmail));
+      return from(this.auth.currentUser.updateEmail(newEmail));
     }
   }
 
@@ -204,7 +202,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.currentUser.updatePassword(newPassword));
+      return from(this.auth.currentUser.updatePassword(newPassword));
     }
   }
 
@@ -215,7 +213,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.verifyPasswordResetCode(code));
+      return from(this.auth.verifyPasswordResetCode(code));
     }
   }
 
@@ -227,25 +225,25 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.confirmPasswordReset(code, newPassword));
+      return from(this.auth.confirmPasswordReset(code, newPassword));
     }
   }
 
 
   relogin(credentials): Observable<any> {
-    return fromPromise(this.auth.currentUser.reauthenticateWithCredential(credentials));
+    return from(this.auth.currentUser.reauthenticateWithCredential(credentials));
   }
 
   deletePermanently(): Observable<any> {
     if (this.server) {
-      return fromPromise(this.auth.currentUser.getIdToken(true).then((idToken) => {
+      return from(this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/deleteAccount?key=${this.config.apiKey}`, {
           'idToken': idToken
         });
       }));
     }
     if (this.browser) {
-      return fromPromise(this.auth.currentUser.delete());
+      return from(this.auth.currentUser.delete());
     }
   }
 
@@ -254,7 +252,7 @@ export class AngularFireLiteAuth {
 
   sendEmailVerification(): Observable<any> {
     if (this.server) {
-      return fromPromise(this.auth.currentUser.getIdToken(true).then((idToken) => {
+      return from(this.auth.currentUser.getIdToken(true).then((idToken) => {
         return this.http
           .post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/getOobConfirmationCode?key=${this.config.apiKey}`, {
             'requestType': 'VERIFY_EMAIL',
@@ -263,7 +261,7 @@ export class AngularFireLiteAuth {
       }));
     }
     if (this.browser) {
-      return fromPromise(this.auth.currentUser.sendEmailVerification());
+      return from(this.auth.currentUser.sendEmailVerification());
     }
   }
 
@@ -277,7 +275,7 @@ export class AngularFireLiteAuth {
       });
     }
     if (this.browser) {
-      return fromPromise(this.auth.sendPasswordResetEmail(email));
+      return from(this.auth.sendPasswordResetEmail(email));
     }
   }
 

@@ -1,17 +1,15 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { AngularFireLiteApp } from '../core.service';
-import { fromPromise } from 'rxjs/observable/fromPromise';
 import { isPlatformBrowser } from '@angular/common';
-
-import { storage } from 'firebase/app';
+import { from, Observable, Subject } from 'rxjs';
+import { FirebaseStorage } from '@firebase/storage-types';
+import 'firebase/storage';
 
 
 @Injectable()
 export class AngularFireLiteStorage {
 
-  private readonly storage: storage.Storage;
+  private readonly storage: FirebaseStorage;
   private readonly browser = isPlatformBrowser(this.platformId);
 
   constructor(private app: AngularFireLiteApp,
@@ -25,21 +23,21 @@ export class AngularFireLiteStorage {
 
   upload(ref: string, file: File | Blob | Uint8Array | any, metadata?: Object | any): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.child(ref).put(file, metadata));
+      return from(this.child(ref).put(file, metadata));
     }
   }
 
   uploadString(ref: string, string: string): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.child(ref).putString(string));
+      return from(this.child(ref).putString(string));
     }
   }
 
   // ------------- Download -----------------//
 
-  download(ref: string): Observable<any> {
+  getDownloadURL(ref: string): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.child(ref).getDownloadURL());
+      return from(this.child(ref).getDownloadURL());
     }
   }
 
@@ -48,7 +46,7 @@ export class AngularFireLiteStorage {
 
   remove(ref): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.child(ref).delete());
+      return from(this.child(ref).delete());
     }
   }
 
@@ -67,13 +65,13 @@ export class AngularFireLiteStorage {
 
   updateMetadata(ref: string, metadata: Object | any): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.child(ref).updateMetadata(metadata));
+      return from(this.child(ref).updateMetadata(metadata));
     }
   }
 
   deleteMetadata(ref: string): Observable<any> {
     if (this.browser) {
-      return fromPromise(this.child(ref).updateMetadata({
+      return from(this.child(ref).updateMetadata({
         customMetadata: null,
         cacheControl: null,
         contentEncoding: null,
