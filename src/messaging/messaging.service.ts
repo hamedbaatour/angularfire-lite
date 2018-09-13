@@ -1,8 +1,8 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { AngularFireLiteApp } from '../core.service';
-import { isPlatformBrowser } from '@angular/common';
-import { from, Observable, Subject } from 'rxjs';
-import { FirebaseMessaging } from '@firebase/messaging-types';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {AngularFireLiteApp} from '../core.service';
+import {isPlatformBrowser} from '@angular/common';
+import {from, Observable, Subject} from 'rxjs';
+import {FirebaseMessaging} from '@firebase/messaging-types';
 import 'firebase/messaging';
 
 @Injectable()

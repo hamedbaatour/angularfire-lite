@@ -1,7 +1,7 @@
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {AngularFireLiteApp} from '../core.service';
 import {HttpClient} from '@angular/common/http';
-import {FirebaseAppConfig} from '../core.module';
+import {FirebaseAppConfig} from '../core.config';
 import {makeStateKey, TransferState} from '@angular/platform-browser';
 import {isPlatformBrowser, isPlatformServer} from '@angular/common';
 import {BehaviorSubject, from, Observable, of, Subject} from 'rxjs';
