@@ -1,9 +1,9 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { AngularFireLiteApp } from '../core.service';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { from, Observable, Subject } from 'rxjs';
-import { FirebaseAuth } from '@firebase/auth-types';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {AngularFireLiteApp} from '../core.service';
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
+import {from, Observable, Subject} from 'rxjs';
+import {FirebaseAuth} from '@firebase/auth-types';
 import 'firebase/auth';
 
 @Injectable()

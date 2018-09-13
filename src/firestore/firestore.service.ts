@@ -1,12 +1,12 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { AngularFireLiteApp } from '../core.service';
-import { HttpClient } from '@angular/common/http';
-import { FirebaseAppConfig } from '../core.module';
-import { makeStateKey, TransferState } from '@angular/platform-browser';
-import { isPlatformBrowser, isPlatformServer } from '@angular/common';
-import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { FirebaseFirestore } from '@firebase/firestore-types';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {AngularFireLiteApp} from '../core.service';
+import {HttpClient} from '@angular/common/http';
+import {FirebaseAppConfig} from '../core.module';
+import {makeStateKey, TransferState} from '@angular/platform-browser';
+import {isPlatformBrowser, isPlatformServer} from '@angular/common';
+import {BehaviorSubject, from, Observable, of, Subject} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {FirebaseFirestore} from '@firebase/firestore-types';
 import 'firebase/firestore';
 
 @Injectable()
