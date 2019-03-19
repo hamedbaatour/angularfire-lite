@@ -46,7 +46,7 @@
     "@angular/http": "^6.0.0",
     "@angular/platform-browser": "^6.0.0",
     "@angular/platform-browser-dynamic": "^6.0.0",
-    "core-js": "^2.5.4",
+    "core-js": "^3.0.0",
     "firebase": "^5.4.2",
     "ng-packagr": "^4.1.1",
     "npm-watch": "^0.4.0",
