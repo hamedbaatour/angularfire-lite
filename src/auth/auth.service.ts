@@ -98,7 +98,7 @@ export class AngularFireLiteAuth {
     }
     if (this.browser) {
       const PROVIDERS = new Subject();
-      this.auth.fetchProvidersForEmail(email).then(((providers) => {
+      this.auth.fetchSignInMethodsForEmail(email).then(((providers) => {
         PROVIDERS.next(providers);
       }));
       return PROVIDERS;

@@ -14,16 +14,6 @@ export function AngularFireLiteAppFactory(config: FirebaseAppConfig) {
   return new AngularFireLiteApp(config);
 }
 
-
-export function fsInit(app: AngularFireLiteApp) {
-  return function () {
-    return new Promise(function (resolve) {
-      app.instance().firestore().settings({timestampsInSnapshots: true});
-      resolve();
-    });
-  };
-}
-
 // @dynamic
 @NgModule({
   imports: [
@@ -42,12 +32,6 @@ export class AngularFireLite {
           provide: AngularFireLiteApp,
           useFactory: AngularFireLiteAppFactory,
           deps: [FirebaseAppConfig]
-        },
-        {
-          provide: APP_INITIALIZER,
-          useFactory: fsInit,
-          deps: [AngularFireLiteApp],
-          multi: true
         },
         AngularFireLiteFirestore,
         AngularFireLiteDatabase,
