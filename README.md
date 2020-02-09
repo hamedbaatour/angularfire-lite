@@ -182,6 +182,8 @@ currenty the demo is our primary test but there will be proper tests in the futu
 ### Team:
 ___
 
+
+
 <table>
   <tbody>
     <tr>
@@ -218,12 +220,8 @@ ___
   </tbody>
 </table>
 
-### Maintainers:
-___
 
-Doors are open!
-
-
+Note: doors are open to join the AFL team!
 
 
 [travis]: https://img.shields.io/travis/hamedbaatour/angularfire-lite.svg
