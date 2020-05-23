@@ -179,16 +179,49 @@ currenty the demo is our primary test but there will be proper tests in the futu
 [![angularfire-lite-credits](https://cdn.rawgit.com/hamedbaatour/fe2002a2acbdd15f3067b344de7eda3c/raw/3f3cb82cc4d528cc468be349ee5378b20c7c5a24/credits.svg)](#)
 
 
-### Author:
-___
-<img src="https://cdn.rawgit.com/hamedbaatour/27ab12e194a559d3a7b5927565c37546/raw/bef25d518d9ed8f0781ca8a3edfd58f6691ef7ad/Angularfire-lite%2520author.svg" alt="angularfirelite-author" width="400px" height="500px">
-
-### Maintainers:
+### Team:
 ___
 
-Doors are open! I will personally design for you a maintainer card just like the one above too :wink:
 
 
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top">
+        <a href="https://github.com/hamedbaatour"><img width="150" height="150" src="https://avatars3.githubusercontent.com/u/5658460?s=460&v=4?s=150"></a>
+        <br>
+        <a href="https://github.com/hamedbaatour">Hamed Baatour</a>
+        <p>Full Stack Developer</p>
+        <p>Author of AFL</p>
+      </td>
+      <td align="center" valign="top">
+        <img width="150" height="150" src="https://i.ibb.co/x1gnstw/placeholder-profile-sq.jpg?s=150">
+        <br>
+        <a href="#"> - </a>
+        <p> - </p>
+        <p> - </p>
+      </td>
+      <td align="center" width="20%" valign="top">
+               <img width="150" height="150" src="https://i.ibb.co/x1gnstw/placeholder-profile-sq.jpg?s=150">
+        <br>
+        <a href="#"> - </a>
+        <p> - </p>
+        <p> - </p>
+      </td>
+      <td align="center" valign="top">
+               <img width="150" height="150" src="https://i.ibb.co/x1gnstw/placeholder-profile-sq.jpg?s=150">
+        <br>
+        <a href="#"> - </a>
+        <p> - </p>
+        <p> - </p>
+		<br>
+      </td>
+     </tr>
+  </tbody>
+</table>
+
+
+Note: doors are open to join the AFL team!
 
 
 [travis]: https://img.shields.io/travis/hamedbaatour/angularfire-lite.svg
